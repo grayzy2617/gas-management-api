@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Bảo hành & Sửa chữa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6">
+        
+        <h1 class="text-2xl font-bold text-slate-800 mb-6">Bảo hành & Sửa chữa</h1>
+
+        <!-- Tabs -->
+        <div class="border-b border-slate-200 mb-6">
+          <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+            <button onclick="switchTab('tab1')" id="btn-tab1" class="border-blue-500 text-blue-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+              Chợ đơn Bảo hành
+            </button>
+            <button onclick="switchTab('tab2')" id="btn-tab2" class="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+              Kho Linh kiện
+            </button>
+            <button onclick="switchTab('tab3')" id="btn-tab3" class="border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+              Bếp cho mượn
+            </button>
+          </nav>
+        </div>
+
+        <!-- Tab 1: Chợ đơn bảo hành -->
+        <div id="tab1" class="tab-content space-y-4">
+          
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:border-blue-300 transition-colors">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 mb-2">Ticket #BH-001</span>
+                <h3 class="text-lg font-bold text-slate-800">Bếp Rinnai RV-365 — Lỗi đánh lửa</h3>
+                <p class="text-sm text-slate-500 mt-1">Khách: Nguyễn Thị Lan | 321 Hai Bà Trưng</p>
+              </div>
+              <div class="text-right">
+                <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-slate-100 text-slate-600">
+                  <i data-lucide="paperclip" class="w-3 h-3"></i> Có ảnh/video
+                </span>
+              </div>
+            </div>
+            <div class="border-t border-slate-100 pt-3 flex justify-end">
+              <button onclick="acceptWarranty('BH-001')" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors flex items-center gap-2">
+                <i data-lucide="wrench" class="w-4 h-4"></i> Nhận sửa chữa
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white p-5 rounded-xl shadow-sm border border-slate-200 hover:border-blue-300 transition-colors">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-orange-100 text-orange-800 mb-2">Ticket #BH-002</span>
+                <h3 class="text-lg font-bold text-slate-800">Van gas Namilux — Rò rỉ</h3>
+                <p class="text-sm text-slate-500 mt-1">Khách: Trần Văn Bình | 654 CMT8</p>
+              </div>
+            </div>
+            <div class="border-t border-slate-100 pt-3 flex justify-end">
+              <button onclick="acceptWarranty('BH-002')" class="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg shadow-sm transition-colors flex items-center gap-2">
+                <i data-lucide="wrench" class="w-4 h-4"></i> Nhận sửa chữa
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Tab 2: Kho linh kiện -->
+        <div id="tab2" class="tab-content hidden space-y-4">
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-5">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-200">
+                    <th class="p-3 text-sm font-medium text-slate-500">Linh kiện</th>
+                    <th class="p-3 text-sm font-medium text-slate-500">Số lượng trên xe</th>
+                    <th class="p-3 text-sm font-medium text-slate-500 text-right">Đơn giá</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 text-sm text-slate-800 font-medium">Van gas</td>
+                    <td class="p-3 text-sm text-slate-700">5 cái</td>
+                    <td class="p-3 text-sm font-medium text-slate-800 text-right">120,000đ</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 text-sm text-slate-800 font-medium">IC đánh lửa</td>
+                    <td class="p-3 text-sm text-slate-700">10 cái</td>
+                    <td class="p-3 text-sm font-medium text-slate-800 text-right">150,000đ</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 text-sm text-slate-800 font-medium">Dây gas 1.5m</td>
+                    <td class="p-3 text-sm text-slate-700">3 cuộn</td>
+                    <td class="p-3 text-sm font-medium text-slate-800 text-right">85,000đ</td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 text-sm text-slate-800 font-medium">Ống dẫn đồng</td>
+                    <td class="p-3 text-sm text-slate-700">2 cái</td>
+                    <td class="p-3 text-sm font-medium text-slate-800 text-right">200,000đ</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div class="mt-4 text-sm text-slate-500 italic bg-slate-50 p-3 rounded border border-slate-200">
+                * Kho di động sẽ tự động trừ số lượng linh kiện khi bạn hoàn thành đơn sửa chữa và báo cáo thay thế.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Bếp cho mượn -->
+        <div id="tab3" class="tab-content hidden space-y-4">
+          <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-5">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-slate-50 border-b border-slate-200">
+                    <th class="p-3 text-sm font-medium text-slate-500">Mã bếp / Model</th>
+                    <th class="p-3 text-sm font-medium text-slate-500">Trạng thái</th>
+                    <th class="p-3 text-sm font-medium text-slate-500">Khách đang mượn</th>
+                    <th class="p-3 text-sm font-medium text-slate-500 text-right">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-200">
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 text-sm">
+                      <p class="font-medium text-slate-800">BEP-TMP-001</p>
+                      <p class="text-slate-500">Rinnai RV-150</p>
+                    </td>
+                    <td class="p-3"><span class="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">Rảnh</span></td>
+                    <td class="p-3 text-sm text-slate-500">N/A</td>
+                    <td class="p-3 text-right">
+                      <button onclick="lendStove('BEP-TMP-001')" class="px-3 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded text-sm font-medium">Cho mượn</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 text-sm">
+                      <p class="font-medium text-slate-800">BEP-TMP-002</p>
+                      <p class="text-slate-500">Namilux NA-300</p>
+                    </td>
+                    <td class="p-3"><span class="px-2 py-1 rounded text-xs font-medium bg-orange-100 text-orange-800">Đang cho mượn</span></td>
+                    <td class="p-3 text-sm text-slate-800">Nguyễn Thị Lan<br><span class="text-slate-500">0901234567</span></td>
+                    <td class="p-3 text-right">
+                      <button onclick="returnStove('BEP-TMP-002')" class="px-3 py-1 bg-slate-100 text-slate-700 hover:bg-slate-200 rounded text-sm font-medium border border-slate-300">Thu hồi</button>
+                    </td>
+                  </tr>
+                  <tr class="hover:bg-slate-50">
+                    <td class="p-3 text-sm">
+                      <p class="font-medium text-slate-800">BEP-TMP-003</p>
+                      <p class="text-slate-500">Paloma PA-100</p>
+                    </td>
+                    <td class="p-3"><span class="px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800">Rảnh</span></td>
+                    <td class="p-3 text-sm text-slate-500">N/A</td>
+                    <td class="p-3 text-right">
+                      <button onclick="lendStove('BEP-TMP-003')" class="px-3 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded text-sm font-medium">Cho mượn</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    let activeOrders = 2; // Giả lập đang có 2 đơn
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById(tabId).classList.remove('hidden');
+
+      document.querySelectorAll('nav button').forEach(el => {
+        el.classList.remove('border-blue-500', 'text-blue-600');
+        el.classList.add('border-transparent', 'text-slate-500');
+      });
+
+      const activeBtn = document.getElementById(`btn-${tabId}`);
+      activeBtn.classList.remove('border-transparent', 'text-slate-500');
+      activeBtn.classList.add('border-blue-500', 'text-blue-600');
+    }
+
+    function acceptWarranty(id) {
+      if (activeOrders >= 3) {
+        showToast('Bạn đang giữ 3 đơn (Giao hàng + Bảo hành). Không thể nhận thêm!', 'error');
+        return;
+      }
+      activeOrders++;
+      showToast(`Đã nhận đơn bảo hành #${id}. Trạng thái: Đang sửa`, 'success');
+      // Hide card
+      setTimeout(() => {
+        const btn = document.querySelector(`button[onclick*="${id}"]`);
+        if (btn) btn.closest('.bg-white').style.display = 'none';
+      }, 300);
+    }
+
+    function lendStove(id) {
+      const body = `
+        <div class="mb-4">
+          <p class="text-sm text-slate-600 mb-2">Bàn giao bếp <strong>${id}</strong> cho khách hàng.</p>
+          <label class="block text-sm font-medium text-slate-700 mb-1">Số điện thoại khách hàng <span class="text-red-500">*</span></label>
+          <input type="text" id="lendPhone" class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="09...">
+        </div>
+      `;
+      const footer = `
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">Hủy</button>
+        <button onclick="confirmLendStove()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors">Xác nhận cho mượn</button>
+      `;
+      showModal('Cho mượn Bếp tạm', body, footer);
+    }
+
+    function confirmLendStove() {
+      const phone = document.getElementById('lendPhone').value;
+      if (!phone) {
+        showToast('Vui lòng nhập SĐT khách hàng!', 'error');
+        return;
+      }
+      closeModal();
+      showToast('Bếp đã chuyển trạng thái Đang cho mượn. Khách đã nhận SMS xác nhận.', 'success');
+    }
+
+    function returnStove(id) {
+      showConfirm(
+        'Thu hồi Bếp tạm',
+        `Xác nhận đã nhận lại bếp <strong>${id}</strong> từ khách hàng?`,
+        () => {
+          showToast('Đã thu hồi bếp, chuyển về trạng thái Rảnh', 'success');
+        }
+      );
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { 
+      initPage('Bảo hành & Sửa chữa', [{label: 'Trang chủ', url: '#'}, {label: 'Bảo hành'}]);
+      lucide.createIcons(); 
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Đơn hàng Của tôi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6">
+        
+        <div class="flex justify-between items-center mb-6">
+          <h2 class="text-xl font-bold text-slate-900">Danh sách Đơn hàng</h2>
+          <div class="flex gap-2">
+            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Tất cả</button>
+            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Đang giao</button>
+            <button class="px-4 py-2 bg-white border border-slate-200 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50">Hoàn thành</button>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm whitespace-nowrap">
+              <thead class="bg-slate-50 text-slate-600 font-medium border-b border-slate-200">
+                <tr>
+                  <th class="px-6 py-4">Mã đơn</th>
+                  <th class="px-6 py-4">Sản phẩm</th>
+                  <th class="px-6 py-4">Tổng tiền</th>
+                  <th class="px-6 py-4">Thanh toán</th>
+                  <th class="px-6 py-4">Trạng thái</th>
+                  <th class="px-6 py-4">Ghi chú</th>
+                  <th class="px-6 py-4 text-right">Thao tác</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="ordersTableBody">
+                <!-- Data will be populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    const orders = [
+      { id: '#DH-20260803-099', items: 'Nhiều sản phẩm', total: 5290000, payment: 'COD', status: 'pending', note: 'Chưa có tài xế' },
+      { id: '#DH-20260803-001', items: '2 bình PG 12kg', total: 840000, payment: 'COD', status: 'shipping', note: 'Tài xế: Lê Minh Tuấn — 0912345678' },
+      { id: '#DH-20260802-015', items: '1 bình PG 50kg', total: 1650000, payment: 'QR Code', status: 'completed', note: 'Giao lúc: 14:35 02/08/2026' },
+      { id: '#DH-20260801-008', items: '1 Bếp Rinnai', total: 2800000, payment: 'Ghi nợ', status: 'completed', note: 'Giao lúc: 09:20 01/08/2026' },
+      { id: '#DH-20260731-022', items: '3 bình PG 12kg', total: 1260000, payment: 'COD', status: 'cancelled', note: 'Lý do: Khách đổi ý' }
+    ];
+
+    function renderOrders() {
+      const tbody = document.getElementById('ordersTableBody');
+      tbody.innerHTML = orders.map((o, index) => {
+        let statusHtml = '';
+        if(typeof statusBadge === 'function') {
+           statusHtml = statusBadge(o.status);
+        } else {
+           statusHtml = `<span class="px-2 py-1 bg-slate-100 rounded text-xs font-medium">${o.status}</span>`;
+        }
+
+        return `
+          <tr class="hover:bg-slate-50 transition-colors">
+            <td class="px-6 py-4 font-medium text-slate-900">${o.id}</td>
+            <td class="px-6 py-4 text-slate-600">${o.items}</td>
+            <td class="px-6 py-4 font-medium text-blue-700">${typeof fmtMoney === 'function' ? fmtMoney(o.total) : o.total.toLocaleString('vi-VN') + ' đ'}</td>
+            <td class="px-6 py-4 text-slate-600">${o.payment}</td>
+            <td class="px-6 py-4">${statusHtml}</td>
+            <td class="px-6 py-4 text-slate-500 text-xs">${o.note}</td>
+            <td class="px-6 py-4 text-right">
+              <button onclick="viewOrderDetails(${index})" class="px-3 py-1.5 bg-slate-100 text-slate-700 rounded-lg text-sm font-medium hover:bg-slate-200 transition-colors inline-flex items-center gap-1">
+                <i data-lucide="eye" class="w-4 h-4"></i> Xem
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    function viewOrderDetails(index) {
+      const o = orders[index];
+      
+      let bodyHtml = `<div class="space-y-4">
+        <div class="flex justify-between border-b border-slate-100 pb-3">
+          <span class="text-slate-500">Mã đơn hàng</span>
+          <span class="font-bold text-slate-900">${o.id}</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-3">
+          <span class="text-slate-500">Sản phẩm</span>
+          <span class="text-slate-900">${o.items}</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-3">
+          <span class="text-slate-500">Tổng tiền</span>
+          <span class="font-bold text-blue-700">${typeof fmtMoney === 'function' ? fmtMoney(o.total) : o.total.toLocaleString('vi-VN') + ' đ'}</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-3">
+          <span class="text-slate-500">Thanh toán</span>
+          <span class="text-slate-900">${o.payment}</span>
+        </div>
+        <div class="flex justify-between border-b border-slate-100 pb-3">
+          <span class="text-slate-500">Trạng thái</span>
+          <span>${typeof statusBadge === 'function' ? statusBadge(o.status) : o.status}</span>
+        </div>
+      `;
+
+      if (o.status === 'shipping') {
+         bodyHtml += `
+          <div class="bg-blue-50 border border-blue-100 p-4 rounded-lg mt-4">
+            <h4 class="font-bold text-blue-900 mb-2">Thông tin tài xế</h4>
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-blue-200 rounded-full flex items-center justify-center text-blue-700">
+                <i data-lucide="user"></i>
+              </div>
+              <div>
+                <div class="font-medium text-slate-900">Lê Minh Tuấn</div>
+                <div class="text-blue-600 font-medium">0912 345 678</div>
+              </div>
+            </div>
+            <div class="mt-3 text-xs text-orange-600 bg-orange-100 p-2 rounded flex items-start gap-1">
+              <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0"></i>
+              Hệ thống hiện chưa hỗ trợ theo dõi GPS thời gian thực.
+            </div>
+          </div>
+         `;
+      } else if (o.status === 'completed') {
+         bodyHtml += `
+          <div class="bg-green-50 border border-green-100 p-4 rounded-lg mt-4">
+            <div class="font-medium text-green-800 flex items-center gap-2">
+              <i data-lucide="check-circle" class="w-5 h-5"></i>
+              Đã giao hàng thành công
+            </div>
+            <div class="text-sm text-green-700 mt-1">${o.note}</div>
+          </div>
+         `;
+      } else if (o.status === 'cancelled') {
+         bodyHtml += `
+          <div class="bg-red-50 border border-red-100 p-4 rounded-lg mt-4">
+            <div class="font-medium text-red-800 flex items-center gap-2">
+              <i data-lucide="x-circle" class="w-5 h-5"></i>
+              Đơn hàng đã bị hủy
+            </div>
+            <div class="text-sm text-red-700 mt-1">${o.note}</div>
+          </div>
+         `;
+      } else if (o.status === 'pending') {
+         bodyHtml += `
+          <div class="bg-slate-50 border border-slate-200 p-4 rounded-lg mt-4 text-center text-slate-600 text-sm">
+            Đang tìm kiếm tài xế giao hàng...
+          </div>
+         `;
+      }
+
+      bodyHtml += `</div>`;
+
+      if(typeof showModal === 'function') {
+         showModal('Chi tiết Đơn hàng', bodyHtml, '<button onclick="closeModal()" class="w-full py-2 bg-slate-100 text-slate-700 rounded-lg font-medium hover:bg-slate-200">Đóng</button>');
+         setTimeout(() => lucide.createIcons(), 50);
+      } else {
+         alert('Chi tiết: ' + o.id + '\nTrạng thái: ' + o.status);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initPage === 'function') {
+        initPage('Đơn hàng Của tôi', [{label: 'Đơn hàng', url: '#'}]);
+      } else {
+        lucide.createIcons();
+      }
+      
+      renderOrders();
+    });
+  </script>
+</body>
+</html>
+

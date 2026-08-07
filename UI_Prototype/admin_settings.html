@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Cấu hình Hệ thống</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6 space-y-6">
+        
+        <div class="max-w-4xl bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+            <h2 class="text-xl font-bold text-slate-800 mb-6">Cấu hình Hệ thống</h2>
+            
+            <div class="space-y-8">
+                <!-- Group 1: Vận chuyển & Tài xế -->
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-700 border-b border-slate-200 pb-2 mb-4">Vận chuyển & Tài xế</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">D_RATE (Đơn giá lương/km)</label>
+                            <div class="relative">
+                                <input type="number" value="5000" class="w-full border border-slate-300 rounded-lg p-2 pr-12">
+                                <span class="absolute right-3 top-2 text-slate-500">đ/km</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">T_LOCK_OUT (Thời gian khóa app khi từ chối đơn)</label>
+                            <div class="relative">
+                                <input type="number" value="30" class="w-full border border-slate-300 rounded-lg p-2 pr-12">
+                                <span class="absolute right-3 top-2 text-slate-500">phút</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">T_ORDER_TIMEOUT (Thời gian đơn trôi)</label>
+                            <div class="relative">
+                                <input type="number" value="15" class="w-full border border-slate-300 rounded-lg p-2 pr-12">
+                                <span class="absolute right-3 top-2 text-slate-500">phút</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">MAX_ORDER_PER_DRIVER (Số đơn tối đa/tài xế)</label>
+                            <div class="relative">
+                                <input type="number" value="3" class="w-full border border-slate-300 rounded-lg p-2 pr-12">
+                                <span class="absolute right-3 top-2 text-slate-500">đơn</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 2: Khách hàng & Công nợ -->
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-700 border-b border-slate-200 pb-2 mb-4">Khách hàng & Công nợ</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">DEBT_LIMIT_RETAIL (Hạn mức nợ lẻ)</label>
+                            <div class="relative">
+                                <input type="number" value="1000000" class="w-full border border-slate-300 rounded-lg p-2 pr-10">
+                                <span class="absolute right-3 top-2 text-slate-500">đ</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">DEBT_LIMIT_WHOLESALE (Hạn mức nợ sỉ)</label>
+                            <div class="relative">
+                                <input type="number" value="10000000" class="w-full border border-slate-300 rounded-lg p-2 pr-10">
+                                <span class="absolute right-3 top-2 text-slate-500">đ</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">DEBT_DUE_DAYS (Số ngày nợ tối đa)</label>
+                            <div class="relative">
+                                <input type="number" value="30" class="w-full border border-slate-300 rounded-lg p-2 pr-12">
+                                <span class="absolute right-3 top-2 text-slate-500">ngày</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">SPAM_THRESHOLD (Ngưỡng đặt/hủy spam)</label>
+                            <div class="relative">
+                                <input type="text" value="3 lần/24h" class="w-full border border-slate-300 rounded-lg p-2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Group 3: Hàng hóa & Bảo hành -->
+                <div>
+                    <h3 class="text-lg font-semibold text-slate-700 border-b border-slate-200 pb-2 mb-4">Hàng hóa & Tồn kho</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">WARRANTY_DAYS (Hạn bảo hành)</label>
+                            <div class="relative">
+                                <input type="number" value="365" class="w-full border border-slate-300 rounded-lg p-2 pr-12">
+                                <span class="absolute right-3 top-2 text-slate-500">ngày</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">RETURN_DAYS (Hạn đổi trả)</label>
+                            <div class="relative">
+                                <input type="number" value="7" class="w-full border border-slate-300 rounded-lg p-2 pr-12">
+                                <span class="absolute right-3 top-2 text-slate-500">ngày</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">SAFETY_STOCK_THRESHOLD (Mức an toàn vỏ bình)</label>
+                            <div class="relative">
+                                <input type="number" value="10" class="w-full border border-slate-300 rounded-lg p-2 pr-12">
+                                <span class="absolute right-3 top-2 text-slate-500">bình</span>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1">DEPOSIT_PER_CYLINDER (Phí cọc vỏ)</label>
+                            <div class="relative">
+                                <input type="number" value="500000" class="w-full border border-slate-300 rounded-lg p-2 pr-10">
+                                <span class="absolute right-3 top-2 text-slate-500">đ</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl text-sm text-blue-800 flex items-start">
+                    <i data-lucide="info" class="w-5 h-5 mr-2 mt-0.5"></i>
+                    <span>Lưu ý: Thay đổi cấu hình sẽ áp dụng cho tất cả đơn hàng mới. Đơn cũ giữ nguyên giá trị cũ.</span>
+                </div>
+
+                <div class="flex justify-end pt-4 border-t border-slate-200">
+                    <button class="bg-blue-600 text-white px-6 py-2 rounded-xl hover:bg-blue-700 shadow-sm" onclick="saveSettings()">
+                        Lưu cấu hình
+                    </button>
+                </div>
+            </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    initPage('Cấu hình Hệ thống', [{label: 'Cấu hình Hệ thống'}]);
+    
+    function saveSettings() {
+        showToast('Đã lưu cấu hình thành công', 'success');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+  </script>
+</body>
+</html>
+

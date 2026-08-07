@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Đối soát Cuối ca</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6">
+        
+        <div class="mb-6 flex space-x-6 border-b border-slate-200">
+            <button class="tab-btn active pb-3 px-1 border-b-2 border-blue-600 text-blue-600 font-semibold text-sm transition-colors" onclick="switchTab('cod-reconciliation', this)">Đối soát Tiền COD Cuối Ca (RC-001)</button>
+            <button class="tab-btn pb-3 px-1 text-slate-500 hover:text-blue-800 border-b-2 border-transparent text-sm transition-colors" onclick="switchTab('cylinder-reconciliation', this)">Đối soát Vỏ bình & Đổi chéo (RC-003)</button>
+            <button class="tab-btn pb-3 px-1 text-slate-500 hover:text-blue-800 border-b-2 border-transparent text-sm transition-colors" onclick="switchTab('seal-check', this)">Kiểm tra Niêm phong Hoàn kho (RC-004)</button>
+        </div>
+
+        <!-- Tab 1: Đối soát COD -->
+        <div id="cod-reconciliation" class="tab-content active">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-2xl mx-auto text-left">
+                <div class="border-b border-slate-200 pb-3 mb-4">
+                  <h2 class="text-lg font-bold text-slate-800">Quyết toán Tiền mặt COD Cuối Ca Làm Việc</h2>
+                  <p class="text-xs text-slate-500">Thủ kho / Quản lý kiểm đếm tiền mặt thực nộp từ tài xế và đóng ca quyết toán</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Chọn Ca làm việc & Tài xế <span class="text-red-500">*</span></label>
+                        <select class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:border-blue-500 font-medium">
+                            <option>Lê Minh Tuấn — Ca sáng 04/08/2026 (5 đơn hoàn thành)</option>
+                            <option>Phạm Hùng — Ca sáng 04/08/2026 (3 đơn hoàn thành)</option>
+                        </select>
+                    </div>
+
+                    <div class="p-4 bg-blue-50 border border-blue-200 rounded-xl grid grid-cols-2 gap-4">
+                        <div>
+                          <span class="text-xs text-blue-700 block font-medium">Tổng tiền COD phải nộp:</span>
+                          <strong class="text-2xl font-bold text-blue-900">2,500,000đ</strong>
+                        </div>
+                        <div>
+                          <span class="text-xs text-blue-700 block font-medium">Số đơn COD hoàn thành:</span>
+                          <strong class="text-2xl font-bold text-blue-900">5 đơn</strong>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Số tiền mặt thực nộp thủ kho <span class="text-red-500">*</span></label>
+                        <div class="flex items-center gap-3">
+                            <input type="number" id="actual-cod" value="2500000" oninput="checkCOD()" class="flex-1 px-3 py-2 border border-slate-300 rounded-lg text-base font-bold text-slate-900 focus:outline-none focus:border-blue-500">
+                            <div id="cod-badge" class="px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-bold whitespace-nowrap">Khớp 100%</div>
+                        </div>
+                        <p id="cod-error" class="text-red-600 text-xs mt-1 hidden">Vui lòng nhập số tiền hợp lệ</p>
+                    </div>
+
+                    <div id="cod-note-section" class="hidden space-y-3 p-3 bg-orange-50 border border-orange-200 rounded-xl">
+                        <div class="text-xs text-orange-900 font-semibold flex items-center gap-1.5">
+                            <i data-lucide="alert-triangle" class="w-4 h-4 text-orange-600 flex-shrink-0"></i>
+                            <span>Phát hiện chênh lệch tiền mặt! Số tiền thiếu sẽ ghi nợ tự động trừ vào lương tài xế.</span>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Ghi chú nguyên nhân chênh lệch <span class="text-red-500">*</span></label>
+                            <textarea id="codDiffNote" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs" rows="2" placeholder="Nhập lý do thiếu tiền (vd: thối nhầm cho khách, rơi mất...)"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="pt-2 flex justify-end">
+                        <button onclick="confirmCOD()" class="bg-blue-600 text-white px-6 py-2.5 rounded-xl hover:bg-blue-700 transition-colors font-bold text-sm shadow-md shadow-blue-600/30">Xác nhận Đóng Ca & Quyết toán COD</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Đối soát Vỏ bình -->
+        <div id="cylinder-reconciliation" class="tab-content">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden max-w-4xl mx-auto text-left">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <div>
+                      <h2 class="font-bold text-slate-800 text-base">Đối soát Vỏ Bình Gas Thu Về Cuối Ca</h2>
+                      <p class="text-xs text-slate-500">Kiểm đếm vỏ thu về, ghi nhận vỏ đổi chéo hãng (PG/Total/PMG) và xử lý đền bù vỏ thiếu</p>
+                    </div>
+                    <select class="px-3 py-1.5 border border-slate-300 rounded-lg text-xs focus:outline-none focus:border-blue-500 font-medium">
+                        <option>Lê Minh Tuấn — Ca sáng 04/08/2026</option>
+                    </select>
+                </div>
+                
+                <div id="cylinder-alert" class="hidden bg-red-50 border-l-4 border-red-500 p-4 m-4">
+                    <div class="flex items-center">
+                        <i data-lucide="x-circle" class="h-5 w-5 text-red-500 flex-shrink-0 mr-3"></i>
+                        <div class="text-xs">
+                            <p class="text-red-700 font-bold">CẢNH BÁO THIẾU VỎ BÌNH!</p>
+                            <p class="text-red-600">Tài xế giao 5 bình gas đầy nhưng chỉ thu về 4 vỏ. Phải lập biên bản đền bù phạt vỏ trước khi đóng ca!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="cross-alert" class="hidden bg-orange-50 border-l-4 border-orange-500 p-4 mx-4 mt-4 mb-2">
+                    <div class="flex items-center">
+                        <i data-lucide="info" class="h-5 w-5 text-orange-500 flex-shrink-0 mr-3"></i>
+                        <div class="text-xs">
+                            <p class="text-orange-800 font-bold">GHI NHẬN ĐỔI CHÉO HÃNG VỎ BÌNH (CI-001)</p>
+                            <p id="cross-msg" class="text-orange-700">Giao Petrolimex nhưng thu vỏ Totalgaz. Hệ thống tự động trừ PG_RONG và cộng TOTAL_RONG vào kho rỗng đại lý.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-4 overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="px-4 py-3 font-semibold">Hãng gas đã xuất giao</th>
+                                <th class="px-4 py-3 font-semibold text-center">Số vỏ phải thu</th>
+                                <th class="px-4 py-3 font-semibold text-center w-36">Số vỏ thực thu</th>
+                                <th class="px-4 py-3 font-semibold">Thương hiệu vỏ thực thu</th>
+                                <th class="px-4 py-3 font-semibold text-right">Trạng thái đối soát</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-3.5 font-medium text-slate-900">Petrolimex 12kg (PG)</td>
+                                <td class="px-4 py-3.5 text-center font-bold text-blue-600 text-sm">5 vỏ</td>
+                                <td class="px-4 py-3.5 text-center">
+                                    <input type="number" id="cyl-actual" value="5" min="0" oninput="checkCylinders()" class="w-20 px-2 py-1 border border-slate-300 rounded text-center font-bold text-sm focus:border-blue-500">
+                                </td>
+                                <td class="px-4 py-3.5">
+                                    <select id="cyl-brand" onchange="checkCylinders()" class="w-full px-2 py-1 border border-slate-300 rounded focus:border-blue-500 font-medium">
+                                        <option value="PG">Petrolimex (Thu đúng hãng)</option>
+                                        <option value="TOTAL">Totalgaz (Đổi chéo)</option>
+                                        <option value="PMG">PV Gas (Đổi chéo)</option>
+                                    </select>
+                                </td>
+                                <td class="px-4 py-3.5 text-right">
+                                  <span id="cyl-status-badge" class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full font-bold">Khớp vỏ 100%</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="px-6 py-4 border-t border-slate-200 bg-slate-50 flex justify-end">
+                    <button onclick="confirmCylinders()" class="bg-blue-600 text-white px-6 py-2.5 rounded-xl hover:bg-blue-700 transition-colors font-bold text-xs shadow-md shadow-blue-600/30">Xác nhận Đối soát Vỏ bình</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 3: Kiểm tra Niêm phong (RC-004) -->
+        <div id="seal-check" class="tab-content">
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded-r-lg max-w-4xl mx-auto text-left">
+                <div class="flex items-center">
+                    <i data-lucide="alert-triangle" class="h-5 w-5 text-yellow-600 flex-shrink-0 mr-3"></i>
+                    <div class="text-xs">
+                        <strong class="text-yellow-900 block font-bold">QUY ĐỊNH HOÀN KHO BÌNH GAS ĐẦY (RC-004):</strong>
+                        <span class="text-yellow-800">Thủ kho phải kiểm tra trực tiếp màng co niêm phong nắp bình gas đối với tất cả đơn giao thất bại. Niêm phong nguyên vẹn mới được cộng bình đầy vào kho. Nếu bị rách/mất niêm phong ➔ Lập biên bản phạt tài xế đền bình.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden max-w-4xl mx-auto text-left">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50">
+                    <h2 class="font-bold text-slate-800 text-base">Danh sách đơn hủy giao thất bại cần hoàn kho bình gas đầy</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="px-4 py-3 font-semibold">Mã đơn</th>
+                                <th class="px-4 py-3 font-semibold">Tài xế mang về</th>
+                                <th class="px-4 py-3 font-semibold">Sản phẩm bình gas</th>
+                                <th class="px-4 py-3 font-semibold w-48">Tình trạng Màng co Niêm phong</th>
+                                <th class="px-4 py-3 font-semibold text-right">Thao tác xử lý</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-4 py-4 font-mono font-bold text-blue-600">ORD-0991</td>
+                                <td class="px-4 py-4 font-medium text-slate-900">Lê Minh Tuấn</td>
+                                <td class="px-4 py-4 text-slate-700">Bình Gas Petrolimex 12kg đầy</td>
+                                <td class="px-4 py-4">
+                                    <select id="seal-1" onchange="handleSealChange(1)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg focus:border-blue-500 font-medium">
+                                        <option value="INTACT">Màng co Nguyên vẹn (Đạt)</option>
+                                        <option value="BROKEN">Niêm phong Bị rách/mất (Lỗi)</option>
+                                    </select>
+                                </td>
+                                <td class="px-4 py-4 text-right">
+                                    <div id="seal-actions-1">
+                                        <button class="bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 font-bold shadow-sm" onclick="returnToStock(1)">Hoàn bình đầy vào kho</button>
+                                    </div>
+                                    <div id="seal-alert-1" class="hidden text-red-600 font-bold">Vi phạm niêm phong!</div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-red-50/30">
+                                <td class="px-4 py-4 font-mono font-bold text-blue-600">ORD-0995</td>
+                                <td class="px-4 py-4 font-medium text-slate-900">Lê Minh Tuấn</td>
+                                <td class="px-4 py-4 text-slate-700">Bình Gas Saigon Petro 12kg đầy</td>
+                                <td class="px-4 py-4">
+                                    <select id="seal-2" onchange="handleSealChange(2)" class="w-full px-2.5 py-1.5 border border-slate-300 rounded-lg focus:border-blue-500 font-medium">
+                                        <option value="INTACT">Màng co Nguyên vẹn (Đạt)</option>
+                                        <option value="BROKEN" selected>Niêm phong Bị rách/mất (Lỗi)</option>
+                                    </select>
+                                </td>
+                                <td class="px-4 py-4 text-right">
+                                    <div id="seal-actions-2" class="hidden">
+                                        <button class="bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 font-bold shadow-sm" onclick="returnToStock(2)">Hoàn bình đầy vào kho</button>
+                                    </div>
+                                    <div id="seal-alert-2" class="flex flex-col items-end gap-1">
+                                        <span class="text-red-600 font-bold">⚠️ VI PHẠM NIÊM PHONG</span>
+                                        <button class="bg-red-600 text-white px-3 py-1 rounded-lg text-xs hover:bg-red-700 font-medium shadow-sm" onclick="reportViolation(2, 'ORD-0995', 'Lê Minh Tuấn', 'Bình Gas Saigon Petro 12kg đầy')">Lập biên bản đền bù</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    initPage('Đối soát Cuối ca', [{label: 'Đối soát Cuối ca'}]);
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(el => {
+          el.classList.remove('active');
+          el.style.display = 'none';
+        });
+        document.querySelectorAll('.tab-btn').forEach(el => {
+            el.classList.remove('active', 'border-blue-600', 'text-blue-600', 'font-semibold');
+            el.classList.add('border-transparent', 'text-slate-500');
+        });
+        const target = document.getElementById(tabId);
+        if (target) {
+            target.classList.add('active');
+            target.style.display = 'block';
+        }
+        if (btn) {
+            btn.classList.add('active', 'border-blue-600', 'text-blue-600', 'font-semibold');
+            btn.classList.remove('border-transparent', 'text-slate-500');
+        }
+        try { if(window.lucide) lucide.createIcons(); } catch(e){}
+    }
+
+    function checkCOD() {
+        const val = document.getElementById('actual-cod').value;
+        const badge = document.getElementById('cod-badge');
+        const err = document.getElementById('cod-error');
+        const note = document.getElementById('cod-note-section');
+        const required = 2500000;
+
+        if (isNaN(val) || val === '') {
+            err.classList.remove('hidden');
+            badge.classList.add('hidden');
+            note.classList.add('hidden');
+            return;
+        }
+        
+        err.classList.add('hidden');
+        badge.classList.remove('hidden');
+        
+        const actual = parseInt(val);
+        if (actual === required) {
+            badge.className = 'px-3 py-1.5 bg-green-100 text-green-700 rounded-full text-xs font-bold whitespace-nowrap';
+            badge.innerText = 'Khớp 100%';
+            note.classList.add('hidden');
+        } else if (actual < required) {
+            const diff = required - actual;
+            badge.className = 'px-3 py-1.5 bg-red-100 text-red-700 rounded-full text-xs font-bold whitespace-nowrap';
+            badge.innerText = 'Thiếu ' + diff.toLocaleString() + 'đ';
+            note.classList.remove('hidden');
+        } else {
+            const diff = actual - required;
+            badge.className = 'px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-xs font-bold whitespace-nowrap';
+            badge.innerText = 'Dư ' + diff.toLocaleString() + 'đ';
+            note.classList.remove('hidden');
+        }
+    }
+
+    function confirmCOD() {
+        const val = document.getElementById('actual-cod').value;
+        if (isNaN(val) || val === '') {
+            showToast('Lỗi: Số tiền không hợp lệ', 'error');
+            return;
+        }
+        showToast('Xác nhận đóng ca & quyết toán COD thành công!', 'success');
+    }
+
+    function checkCylinders() {
+        const actualQty = parseInt(document.getElementById('cyl-actual').value) || 0;
+        const brand = document.getElementById('cyl-brand').value;
+        const alertMissing = document.getElementById('cylinder-alert');
+        const alertCross = document.getElementById('cross-alert');
+        const badge = document.getElementById('cyl-status-badge');
+
+        if (actualQty < 5) {
+            alertMissing.classList.remove('hidden');
+            badge.className = 'px-2.5 py-1 bg-red-100 text-red-700 rounded-full font-bold';
+            badge.innerText = `Thiếu ${5 - actualQty} vỏ`;
+        } else {
+            alertMissing.classList.add('hidden');
+            badge.className = 'px-2.5 py-1 bg-green-100 text-green-700 rounded-full font-bold';
+            badge.innerText = 'Khớp vỏ 100%';
+        }
+
+        if (brand !== 'PG') {
+            alertCross.classList.remove('hidden');
+            const bName = brand === 'TOTAL' ? 'TOTAL_RONG' : 'PMG_RONG';
+            document.getElementById('cross-msg').innerText = `Giao Petrolimex nhưng thu vỏ ${brand === 'TOTAL' ? 'Totalgaz' : 'PV Gas'}. Tự động trừ 1 PG_RONG và cộng 1 ${bName} vào kho rỗng đại lý.`;
+        } else {
+            alertCross.classList.add('hidden');
+        }
+    }
+
+    function confirmCylinders() {
+        showToast('Xác nhận đối soát vỏ bình thành công! Cập nhật kho rỗng.', 'success');
+    }
+
+    function handleSealChange(id) {
+        const val = document.getElementById('seal-' + id).value;
+        const actions = document.getElementById('seal-actions-' + id);
+        const alert = document.getElementById('seal-alert-' + id);
+
+        if (val === 'INTACT') {
+            actions.classList.remove('hidden');
+            alert.classList.add('hidden');
+        } else {
+            actions.classList.add('hidden');
+            alert.classList.remove('hidden');
+        }
+    }
+
+    function returnToStock(id) {
+        showToast('Đã kiểm tra niêm phong đạt! Cộng bình gas đầy vào kho thành công.', 'success');
+    }
+
+    function reportViolation(id, orderCode, driverName, prodName) {
+        const modalHtml = `
+            <div class="space-y-4 text-left text-xs">
+                <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                  <h4 class="font-bold text-red-900 text-sm mb-1">Biên bản Vi phạm Niêm phong Bình Gas Hoàn Kho</h4>
+                  <p class="text-red-700">Mã đơn: <strong>${orderCode}</strong> | Tài xế chịu trách nhiệm: <strong>${driverName}</strong></p>
+                  <p class="text-slate-700 mt-0.5">Sản phẩm: ${prodName}</p>
+                </div>
+
+                <div>
+                    <label class="block font-medium text-slate-700 mb-1">Mô tả chi tiết vi phạm <span class="text-red-500">*</span></label>
+                    <textarea class="w-full px-3 py-2 border rounded-lg" rows="2" placeholder="Màng co bị xé rách hoàn toàn, van gas đã có dấu hiệu bị tháo mở xả bớt gas...">Màng co mút nắp bình bị rách xé hoàn toàn, kiểm tra trọng lượng bình bị thiếu 1.5kg gas.</textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block font-medium text-slate-700 mb-1">Số tiền phạt đền bù (VNĐ)</label>
+                      <input type="number" value="420000" class="w-full px-3 py-2 border rounded-lg font-bold text-red-600">
+                  </div>
+                  <div>
+                      <label class="block font-medium text-slate-700 mb-1">Hình thức xử lý</label>
+                      <select class="w-full px-3 py-2 border rounded-lg">
+                        <option>Trừ trực tiếp vào bảng lương tài xế cuối ca</option>
+                        <option>Tài xế nộp tiền mặt đền bù tại kho</option>
+                      </select>
+                  </div>
+                </div>
+            </div>
+        `;
+        const footerHtml = `
+            <button onclick="closeModal()" class="px-4 py-2 text-slate-600 bg-slate-100 text-xs font-medium rounded-lg hover:bg-slate-200">Hủy</button>
+            <button onclick="closeModal(); showToast('Đã lưu biên bản vi phạm & ghi nợ trừ lương tài xế!', 'success');" class="px-4 py-2 text-white bg-red-600 text-xs font-bold rounded-lg hover:bg-red-700">Lưu Biên Bản Vi Phạm</button>
+        `;
+        showModal('Lập Biên Bản Vi Phạm Niêm Phong', modalHtml, footerHtml);
+    }
+  </script>
+</body>
+</html>

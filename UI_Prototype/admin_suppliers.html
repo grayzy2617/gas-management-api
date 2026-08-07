@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Công nợ Nhà sản xuất</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6 space-y-6">
+        
+        <div class="flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-bold text-slate-800">Quản lý Công nợ Nhà sản xuất (NSX)</h2>
+              <p class="text-slate-500 text-sm mt-0.5">Theo dõi lịch sử nhập kho, đối soát nợ gối đầu 30 ngày và nhắc lịch thanh toán</p>
+            </div>
+            <button class="bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 flex items-center shadow-sm font-medium text-sm transition-colors" onclick="openImportModal()">
+                <i data-lucide="package-plus" class="w-5 h-5 mr-2"></i> Lập phiếu Nhập kho mới
+            </button>
+        </div>
+
+        <!-- Stat cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">Nợ Petrolimex</p>
+                        <p class="text-2xl font-bold text-slate-900">45,000,000đ</p>
+                    </div>
+                    <div class="p-3 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="building" class="w-6 h-6"></i></div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span class="text-red-600 font-semibold flex items-center"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1"></i> Còn 5 ngày (Hạn: 08/08)</span>
+                    <button onclick="openPaymentModal('Petrolimex', 45000000)" class="text-blue-600 hover:text-blue-800 font-medium">Thanh toán →</button>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">Nợ PV Gas</p>
+                        <p class="text-2xl font-bold text-slate-900">20,000,000đ</p>
+                    </div>
+                    <div class="p-3 bg-indigo-50 text-indigo-600 rounded-xl"><i data-lucide="building" class="w-6 h-6"></i></div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span class="text-green-600 font-semibold flex items-center"><i data-lucide="clock" class="w-3.5 h-3.5 mr-1"></i> Còn 22 ngày (Hạn: 25/08)</span>
+                    <button onclick="openPaymentModal('PV Gas', 20000000)" class="text-blue-600 hover:text-blue-800 font-medium">Thanh toán →</button>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 flex flex-col justify-between">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <p class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">Nợ Saigon Petro</p>
+                        <p class="text-2xl font-bold text-slate-900">0đ</p>
+                    </div>
+                    <div class="p-3 bg-green-50 text-green-600 rounded-xl"><i data-lucide="check-circle" class="w-6 h-6"></i></div>
+                </div>
+                <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
+                    <span class="text-slate-500">Đã tất toán toàn bộ</span>
+                    <span class="text-green-600 font-medium">Sẵn sàng gối đầu mới</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cảnh báo -->
+        <div class="bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-start shadow-sm">
+            <div class="text-orange-600 mt-0.5 flex-shrink-0"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
+            <div class="ml-3">
+                <h3 class="text-orange-900 font-bold text-sm">Cảnh báo Công nợ Gối đầu Sắp đến hạn</h3>
+                <p class="text-orange-800 text-xs mt-0.5">Khoản nợ NSX Petrolimex trị giá <strong>45,000,000đ</strong> sẽ đến hạn thanh toán trong <strong>5 ngày tới (08/08/2026)</strong>. Vui lòng kiểm tra dòng tiền để thanh toán đúng hạn gối đầu.</p>
+            </div>
+        </div>
+
+        <!-- Lịch sử nhập kho -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
+                <h3 class="text-base font-bold text-slate-800">Lịch sử Nhập kho & Tình trạng Thanh toán Nợ</h3>
+                <div class="flex items-center gap-2">
+                  <select class="px-3 py-1.5 text-xs border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                    <option value="">Tất cả NSX</option>
+                    <option>Petrolimex</option>
+                    <option>PV Gas</option>
+                    <option>Saigon Petro</option>
+                  </select>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                            <th class="py-3 px-6 font-semibold">Mã phiếu</th>
+                            <th class="py-3 px-6 font-semibold">Ngày nhập</th>
+                            <th class="py-3 px-6 font-semibold">Nhà sản xuất</th>
+                            <th class="py-3 px-6 font-semibold">Mặt hàng nhập</th>
+                            <th class="py-3 px-6 font-semibold text-right">Số lượng</th>
+                            <th class="py-3 px-6 font-semibold text-right">Đơn giá nhập</th>
+                            <th class="py-3 px-6 font-semibold text-right">Tổng giá trị</th>
+                            <th class="py-3 px-6 font-semibold text-right">Đã thanh toán</th>
+                            <th class="py-3 px-6 font-semibold text-right">Còn nợ</th>
+                            <th class="py-3 px-6 font-semibold">Hạn thanh toán</th>
+                            <th class="py-3 px-6 font-semibold">Trạng thái</th>
+                            <th class="py-3 px-6 font-semibold text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-xs divide-y divide-slate-100">
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-mono font-medium text-slate-800">PN-20260801-01</td>
+                            <td class="py-3.5 px-6 text-slate-600">01/08/2026</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Petrolimex</td>
+                            <td class="py-3.5 px-6 text-slate-700">Gas Petrolimex 12kg đầy</td>
+                            <td class="py-3.5 px-6 text-right font-semibold">100 bình</td>
+                            <td class="py-3.5 px-6 text-right text-slate-600">350,000đ</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">35,000,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-green-600 font-medium">0đ</td>
+                            <td class="py-3.5 px-6 text-right text-red-600 font-bold">35,000,000đ</td>
+                            <td class="py-3.5 px-6 text-red-600 font-semibold">08/08/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full font-medium">Còn nợ</span></td>
+                            <td class="py-3.5 px-6 text-right"><button class="px-2.5 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-lg font-medium" onclick="openPaymentModal('Petrolimex', 35000000)">Thanh toán</button></td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-mono font-medium text-slate-800">PN-20260720-04</td>
+                            <td class="py-3.5 px-6 text-slate-600">20/07/2026</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Petrolimex</td>
+                            <td class="py-3.5 px-6 text-slate-700">Gas Petrolimex 50kg đầy</td>
+                            <td class="py-3.5 px-6 text-right font-semibold">50 bình</td>
+                            <td class="py-3.5 px-6 text-right text-slate-600">900,000đ</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">45,000,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-green-600 font-medium">35,000,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-red-600 font-bold">10,000,000đ</td>
+                            <td class="py-3.5 px-6 text-red-600 font-semibold">08/08/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full font-medium">Còn nợ</span></td>
+                            <td class="py-3.5 px-6 text-right"><button class="px-2.5 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-lg font-medium" onclick="openPaymentModal('Petrolimex', 10000000)">Thanh toán</button></td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-mono font-medium text-slate-800">PN-20260715-02</td>
+                            <td class="py-3.5 px-6 text-slate-600">15/07/2026</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">PV Gas</td>
+                            <td class="py-3.5 px-6 text-slate-700">Gas PV Gas 12kg đầy</td>
+                            <td class="py-3.5 px-6 text-right font-semibold">80 bình</td>
+                            <td class="py-3.5 px-6 text-right text-slate-600">340,000đ</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">27,200,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-green-600 font-medium">7,200,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-red-600 font-bold">20,000,000đ</td>
+                            <td class="py-3.5 px-6 text-slate-600">25/08/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full font-medium">Còn nợ</span></td>
+                            <td class="py-3.5 px-6 text-right"><button class="px-2.5 py-1 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-lg font-medium" onclick="openPaymentModal('PV Gas', 20000000)">Thanh toán</button></td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-mono font-medium text-slate-800">PN-20260701-01</td>
+                            <td class="py-3.5 px-6 text-slate-600">01/07/2026</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Saigon Petro</td>
+                            <td class="py-3.5 px-6 text-slate-700">Gas Saigon Petro 12kg đầy</td>
+                            <td class="py-3.5 px-6 text-right font-semibold">150 bình</td>
+                            <td class="py-3.5 px-6 text-right text-slate-600">340,000đ</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">51,000,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-green-600 font-medium">51,000,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-slate-400">0đ</td>
+                            <td class="py-3.5 px-6 text-slate-500">01/08/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full font-medium">Đã tất toán</span></td>
+                            <td class="py-3.5 px-6 text-right"><span class="text-slate-400 text-xs">Hoàn thành</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    initPage('Công nợ Nhà sản xuất', [{label: 'Công nợ Nhà sản xuất'}]);
+    
+    function openPaymentModal(supplier, currentDebt) {
+        const body = `
+            <div class="space-y-4 text-left">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Mã phiếu thanh toán</label>
+                      <input type="text" value="TT-${Date.now().toString().slice(-6)}" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-100 text-slate-600 text-sm font-mono" readonly>
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Ngày thanh toán</label>
+                      <input type="date" id="payDate" value="2026-08-04" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Nhà sản xuất (NSX)</label>
+                      <input type="text" value="${supplier}" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-100 font-bold text-slate-800 text-sm" readonly>
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Tổng nợ hiện tại</label>
+                      <input type="text" value="${fmtMoney(currentDebt)}" class="w-full border border-slate-300 rounded-lg p-2 bg-red-50 text-red-700 font-bold text-sm" readonly>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Số tiền thanh toán (VNĐ) <span class="text-red-500">*</span></label>
+                      <input type="number" id="payAmount" value="${currentDebt}" oninput="calcRemainingDebt(${currentDebt})" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-bold text-blue-900">
+                      <p id="payError" class="text-red-600 text-xs mt-1 hidden">Số tiền phải lớn hơn 0 và không vượt quá tổng nợ</p>
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Dư nợ còn lại sau trả</label>
+                      <input type="text" id="remDebt" value="0đ" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-100 text-slate-800 text-sm font-bold" readonly>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Phương thức thanh toán</label>
+                      <select id="payMethod" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                        <option>Chuyển khoản Ngân hàng (Ủy nhiệm chi)</option>
+                        <option>Tiền mặt tại kho</option>
+                      </select>
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Mã chứng từ / Số GD Ngân hàng</label>
+                      <input type="text" id="payDoc" placeholder="VD: FT2608049982" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-mono">
+                  </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Ghi chú thanh toán</label>
+                    <textarea id="payNote" rows="2" placeholder="Nhập ghi chú hoặc lý do đợt thanh toán này..." class="w-full border border-slate-300 rounded-lg p-2 text-sm"></textarea>
+                </div>
+            </div>
+        `;
+        const footer = `
+            <button class="px-4 py-2 bg-slate-200 text-slate-800 text-sm font-medium rounded-lg mr-2 hover:bg-slate-300" onclick="closeModal()">Hủy</button>
+            <button class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700" onclick="processPayment(${currentDebt})">Xác nhận Thanh toán</button>
+        `;
+        showModal(`Thanh toán Công nợ — ${supplier}`, body, footer);
+    }
+
+    function calcRemainingDebt(totalDebt) {
+        const amt = parseFloat(document.getElementById('payAmount').value) || 0;
+        const rem = totalDebt - amt;
+        document.getElementById('remDebt').value = fmtMoney(rem < 0 ? 0 : rem);
+    }
+
+    function processPayment(totalDebt) {
+        const amt = parseFloat(document.getElementById('payAmount').value);
+        if(isNaN(amt) || amt <= 0 || amt > totalDebt) {
+            document.getElementById('payError').classList.remove('hidden');
+        } else {
+            document.getElementById('payError').classList.add('hidden');
+            closeModal();
+            showToast(`Thanh toán ${fmtMoney(amt)} thành công! Đã cập nhật công nợ.`, 'success');
+        }
+    }
+
+    function openImportModal() {
+        const body = `
+            <div class="space-y-4 text-left text-xs">
+                <!-- Thông tin chung phiếu nhập -->
+                <div class="grid grid-cols-3 gap-3 p-3 bg-slate-50 rounded-xl border border-slate-200">
+                  <div>
+                      <label class="block font-medium text-slate-700 mb-1">Mã phiếu nhập</label>
+                      <input type="text" value="PN-${Date.now().toString().slice(-6)}" class="w-full border border-slate-300 rounded-lg p-1.5 bg-slate-100 text-slate-600 font-mono text-xs" readonly>
+                  </div>
+                  <div>
+                      <label class="block font-medium text-slate-700 mb-1">Ngày nhập kho <span class="text-red-500">*</span></label>
+                      <input type="date" id="importDate" value="2026-08-04" class="w-full border border-slate-300 rounded-lg p-1.5 text-xs">
+                  </div>
+                  <div>
+                      <label class="block font-medium text-slate-700 mb-1">Nhà sản xuất (NSX) <span class="text-red-500">*</span></label>
+                      <select id="importSupplier" class="w-full border border-slate-300 rounded-lg p-1.5 text-xs font-semibold" onchange="checkDebt(this.value)">
+                          <option value="">-- Chọn NSX --</option>
+                          <option value="Petrolimex" selected>Petrolimex (Đang nợ 45M)</option>
+                          <option value="PV Gas">PV Gas (Đang nợ 20M)</option>
+                          <option value="Saigon Petro">Saigon Petro (Dư nợ 0đ)</option>
+                          <option value="Totalgaz">Totalgaz (Dư nợ 0đ)</option>
+                      </select>
+                  </div>
+                </div>
+
+                <div id="debtWarning" class="p-2.5 bg-orange-50 border border-orange-200 rounded-lg text-xs text-orange-900 flex items-start gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-orange-600 flex-shrink-0 mt-0.5"></i>
+                    <span id="debtMsg"><strong>Đại lý đang có dư nợ cũ 45,000,000đ</strong> với Petrolimex (còn 5 ngày). Gợi ý: Gối đầu đợt nhập mới này.</span>
+                </div>
+
+                <!-- Bảng danh sách mặt hàng nhập kho (Multi-item dynamic table) -->
+                <div class="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                  <div class="px-4 py-2.5 bg-slate-100 border-b border-slate-200 flex justify-between items-center">
+                    <h4 class="font-bold text-slate-800 text-xs uppercase tracking-wider">Danh sách Mặt hàng Nhập kho (Nhiều loại gas)</h4>
+                    <button type="button" onclick="addImportRow()" class="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs font-medium hover:bg-blue-700 flex items-center gap-1 shadow-sm">
+                      <i data-lucide="plus" class="w-3.5 h-3.5"></i> Thêm dòng mặt hàng
+                    </button>
+                  </div>
+
+                  <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
+                      <thead>
+                        <tr class="bg-slate-50 text-slate-600 border-b border-slate-200">
+                          <th class="py-2 px-3 font-semibold">Tên loại bình / Mặt hàng nhập</th>
+                          <th class="py-2 px-3 font-semibold text-center w-24">Số lượng</th>
+                          <th class="py-2 px-3 font-semibold text-right w-32">Đơn giá (VNĐ)</th>
+                          <th class="py-2 px-3 font-semibold text-right w-36">Thành tiền</th>
+                          <th class="py-2 px-3 font-semibold text-center w-12">Xóa</th>
+                        </tr>
+                      </thead>
+                      <tbody id="importItemsTableBody" class="divide-y divide-slate-100">
+                        <!-- Default Row 1 -->
+                        <tr class="import-row">
+                          <td class="py-2 px-3">
+                            <select class="item-select w-full border border-slate-300 rounded p-1.5 text-xs">
+                              <option value="Bình gas Petrolimex 12kg đầy" selected>Bình gas Petrolimex 12kg đầy</option>
+                              <option value="Bình gas Petrolimex 50kg đầy">Bình gas Petrolimex 50kg đầy</option>
+                              <option value="Bình gas PV Gas 12kg đầy">Bình gas PV Gas 12kg đầy</option>
+                              <option value="Bình gas Saigon Petro 12kg đầy">Bình gas Saigon Petro 12kg đầy</option>
+                              <option value="Van gas Namilux">Van gas Namilux</option>
+                              <option value="Dây gas Petrolimex 1.5m">Dây gas Petrolimex 1.5m</option>
+                            </select>
+                          </td>
+                          <td class="py-2 px-3">
+                            <input type="number" class="item-qty w-full border border-slate-300 rounded p-1.5 text-center font-bold text-xs" value="100" min="1" oninput="calcImportTotal()">
+                          </td>
+                          <td class="py-2 px-3">
+                            <input type="number" class="item-price w-full border border-slate-300 rounded p-1.5 text-right font-bold text-xs" value="350000" min="1" oninput="calcImportTotal()">
+                          </td>
+                          <td class="py-2 px-3 text-right font-bold text-slate-800 item-total">35,000,000đ</td>
+                          <td class="py-2 px-3 text-center">
+                            <button type="button" onclick="removeImportRow(this)" class="text-slate-400 hover:text-red-600 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                          </td>
+                        </tr>
+                        <!-- Default Row 2 -->
+                        <tr class="import-row">
+                          <td class="py-2 px-3">
+                            <select class="item-select w-full border border-slate-300 rounded p-1.5 text-xs">
+                              <option value="Bình gas Petrolimex 12kg đầy">Bình gas Petrolimex 12kg đầy</option>
+                              <option value="Bình gas Petrolimex 50kg đầy" selected>Bình gas Petrolimex 50kg đầy (Công nghiệp)</option>
+                              <option value="Bình gas PV Gas 12kg đầy">Bình gas PV Gas 12kg đầy</option>
+                              <option value="Bình gas Saigon Petro 12kg đầy">Bình gas Saigon Petro 12kg đầy</option>
+                              <option value="Van gas Namilux">Van gas Namilux</option>
+                              <option value="Dây gas Petrolimex 1.5m">Dây gas Petrolimex 1.5m</option>
+                            </select>
+                          </td>
+                          <td class="py-2 px-3">
+                            <input type="number" class="item-qty w-full border border-slate-300 rounded p-1.5 text-center font-bold text-xs" value="20" min="1" oninput="calcImportTotal()">
+                          </td>
+                          <td class="py-2 px-3">
+                            <input type="number" class="item-price w-full border border-slate-300 rounded p-1.5 text-right font-bold text-xs" value="900000" min="1" oninput="calcImportTotal()">
+                          </td>
+                          <td class="py-2 px-3 text-right font-bold text-slate-800 item-total">18,000,000đ</td>
+                          <td class="py-2 px-3 text-center">
+                            <button type="button" onclick="removeImportRow(this)" class="text-slate-400 hover:text-red-600 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <!-- Tổng kết tài chính phiếu nhập -->
+                <div class="p-3.5 bg-slate-100 rounded-xl border border-slate-200 grid grid-cols-3 gap-3 text-xs">
+                  <div>
+                    <span class="text-slate-500 block">Tổng tiền toàn bộ phiếu:</span>
+                    <strong id="lblTotalVal" class="text-base text-slate-900 font-extrabold">53,000,000đ</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-500 block">Thanh toán ngay (VNĐ):</span>
+                    <strong id="lblPaidVal" class="text-base text-green-600 font-extrabold">10,000,000đ</strong>
+                  </div>
+                  <div>
+                    <span class="text-slate-500 block">Ghi tăng nợ gối đầu:</span>
+                    <strong id="lblDebtVal" class="text-base text-red-600 font-extrabold">43,000,000đ</strong>
+                  </div>
+                </div>
+
+                <!-- Ô nhập tiền trả ngay & thông tin thêm -->
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                      <label class="block font-medium text-slate-700 mb-1">Số tiền thanh toán ngay đợt này (VNĐ)</label>
+                      <input type="number" id="importPaid" value="10000000" min="0" oninput="calcImportTotal()" class="w-full border border-slate-300 rounded-lg p-2 text-xs font-bold text-green-700">
+                  </div>
+                  <div>
+                      <label class="block font-medium text-slate-700 mb-1">Hạn thanh toán nợ gối đầu (+30 ngày)</label>
+                      <input type="date" id="importDueDate" value="2026-09-03" class="w-full border border-slate-300 rounded-lg p-2 text-xs">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div>
+                      <label class="block font-medium text-slate-700 mb-1">Số hóa đơn / Hóa đơn GTGT</label>
+                      <input type="text" id="importInvCode" value="HD-883921" placeholder="VD: HD-883921" class="w-full border border-slate-300 rounded-lg p-1.5 text-xs font-mono">
+                  </div>
+                  <div>
+                      <label class="block font-medium text-slate-700 mb-1">Ghi chú lô hàng nhập</label>
+                      <input type="text" id="importNote" value="Lô nhập gas Petrolimex chính hãng đợt 1 T8/2026" placeholder="Ghi chú thêm về lô hàng, số xe giao..." class="w-full border border-slate-300 rounded-lg p-1.5 text-xs">
+                  </div>
+                </div>
+            </div>
+        `;
+        const footer = `
+            <button class="px-4 py-2 bg-slate-200 text-slate-800 text-xs font-medium rounded-lg mr-2 hover:bg-slate-300" onclick="closeModal()">Hủy</button>
+            <button class="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-lg hover:bg-blue-700 shadow-md shadow-blue-600/30" onclick="confirmImport()">Tạo Phiếu Nhập & Ghi Tăng Nợ</button>
+        `;
+        showModal('Lập Phiếu Nhập Kho & Công Nợ Gối Đầu NSX (Nhiều Loại Gas)', body, footer, 'max-w-3xl');
+        calcImportTotal();
+    }
+
+    function addImportRow() {
+        const tbody = document.getElementById('importItemsTableBody');
+        if (!tbody) return;
+        const tr = document.createElement('tr');
+        tr.className = 'import-row';
+        tr.innerHTML = `
+          <td class="py-2 px-3">
+            <select class="item-select w-full border border-slate-300 rounded p-1.5 text-xs">
+              <option value="Bình gas Petrolimex 12kg đầy">Bình gas Petrolimex 12kg đầy</option>
+              <option value="Bình gas Petrolimex 50kg đầy">Bình gas Petrolimex 50kg đầy</option>
+              <option value="Bình gas PV Gas 12kg đầy">Bình gas PV Gas 12kg đầy</option>
+              <option value="Bình gas Saigon Petro 12kg đầy">Bình gas Saigon Petro 12kg đầy</option>
+              <option value="Van gas Namilux">Van gas Namilux</option>
+              <option value="Dây gas Petrolimex 1.5m">Dây gas Petrolimex 1.5m</option>
+            </select>
+          </td>
+          <td class="py-2 px-3">
+            <input type="number" class="item-qty w-full border border-slate-300 rounded p-1.5 text-center font-bold text-xs" value="10" min="1" oninput="calcImportTotal()">
+          </td>
+          <td class="py-2 px-3">
+            <input type="number" class="item-price w-full border border-slate-300 rounded p-1.5 text-right font-bold text-xs" value="350000" min="1" oninput="calcImportTotal()">
+          </td>
+          <td class="py-2 px-3 text-right font-bold text-slate-800 item-total">3,500,000đ</td>
+          <td class="py-2 px-3 text-center">
+            <button type="button" onclick="removeImportRow(this)" class="text-slate-400 hover:text-red-600 p-1"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+        calcImportTotal();
+        try { if(window.lucide) lucide.createIcons(); } catch(e){}
+    }
+
+    function removeImportRow(btn) {
+        const tbody = document.getElementById('importItemsTableBody');
+        if (tbody && tbody.children.length > 1) {
+            btn.closest('tr').remove();
+            calcImportTotal();
+        } else {
+            showToast('Phiếu nhập phải có ít nhất 1 dòng mặt hàng!', 'warning');
+        }
+    }
+
+    function checkDebt(val) {
+        const warn = document.getElementById('debtWarning');
+        const msg = document.getElementById('debtMsg');
+        if (val === 'Petrolimex') {
+            warn.classList.remove('hidden');
+            msg.innerHTML = '<strong>Đại lý đang có dư nợ cũ 45,000,000đ</strong> với Petrolimex (còn 5 ngày). Gợi ý: Gối đầu đợt nhập mới này.';
+        } else if (val === 'PV Gas') {
+            warn.classList.remove('hidden');
+            msg.innerHTML = '<strong>Đại lý đang có dư nợ cũ 20,000,000đ</strong> với PV Gas (còn 22 ngày).';
+        } else {
+            warn.classList.add('hidden');
+        }
+    }
+
+    function calcImportTotal() {
+        const rows = document.querySelectorAll('#importItemsTableBody .import-row');
+        let grandTotal = 0;
+
+        rows.forEach(row => {
+            const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+            const price = parseFloat(row.querySelector('.item-price').value) || 0;
+            const lineTotal = qty * price;
+            grandTotal += lineTotal;
+            row.querySelector('.item-total').textContent = fmtMoney(lineTotal);
+        });
+
+        const paid = parseFloat(document.getElementById('importPaid').value) || 0;
+        const debt = grandTotal - paid;
+
+        document.getElementById('lblTotalVal').textContent = fmtMoney(grandTotal);
+        document.getElementById('lblPaidVal').textContent = fmtMoney(paid);
+        document.getElementById('lblDebtVal').textContent = fmtMoney(debt < 0 ? 0 : debt);
+    }
+
+    function confirmImport() {
+        const supp = document.getElementById('importSupplier').value;
+        const rows = document.querySelectorAll('#importItemsTableBody .import-row');
+
+        if (!supp) {
+            showToast('Vui lòng chọn Nhà sản xuất!', 'error');
+            return;
+        }
+
+        if (rows.length === 0) {
+            showToast('Chưa có mặt hàng nào trong phiếu nhập!', 'error');
+            return;
+        }
+
+        const totalVal = document.getElementById('lblTotalVal').textContent;
+        const debtVal = document.getElementById('lblDebtVal').textContent;
+
+        closeModal();
+        showToast(`Tạo phiếu nhập từ ${supp} thành công! (${rows.length} loại gas - Tổng ${totalVal}). Ghi tăng nợ gối đầu: ${debtVal}`, 'success');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Quản lý Khách hàng & Công nợ</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6 space-y-6">
+        
+        <div class="flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-bold text-slate-800">Quản lý Hồ sơ Khách hàng & Công nợ</h2>
+              <p class="text-slate-500 text-sm mt-0.5">Phân loại Sỉ/Lẻ, xét duyệt điều kiện ghi nợ tự động (>=1 năm & >=10 bình) và quản lý hóa đơn VAT</p>
+            </div>
+            <button class="bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 flex items-center shadow-sm font-medium text-sm transition-colors" onclick="openAddCustomerModal()">
+                <i data-lucide="user-plus" class="w-5 h-5 mr-2"></i> Thêm Khách hàng mới
+            </button>
+        </div>
+
+        <!-- Tabs -->
+        <div class="border-b border-slate-200">
+            <nav class="-mb-px flex space-x-8">
+                <button class="tab-btn border-blue-600 text-blue-600 font-semibold whitespace-nowrap pb-3 px-1 border-b-2 text-sm transition-colors" onclick="switchTab('customers', this)">Danh sách Khách hàng & Nợ</button>
+                <button class="tab-btn border-transparent text-slate-500 hover:text-slate-700 whitespace-nowrap pb-3 px-1 border-b-2 text-sm transition-colors" onclick="switchTab('vat', this)">Cấu hình VAT Hóa đơn</button>
+            </nav>
+        </div>
+
+        <!-- Tab Content: Customers -->
+        <div id="tab-customers" class="block space-y-4">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <div class="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-4">
+                  <div class="relative flex-1 max-w-md">
+                    <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                    <input type="text" placeholder="Tìm tên khách hàng, SĐT, MST, tên quán..." class="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <select class="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                      <option value="">Tất cả phân loại</option>
+                      <option value="B2B">Khách sỉ B2B (Quán ăn/Nhà hàng)</option>
+                      <option value="B2C">Khách lẻ B2C (Hộ gia đình)</option>
+                    </select>
+                    <select class="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                      <option value="">Tất cả trạng thái nợ</option>
+                      <option value="NORMAL">Bình thường</option>
+                      <option value="OVERLIMIT">Vượt hạn mức</option>
+                      <option value="LOCKED">Khóa nợ (>30 ngày)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                                <th class="py-3.5 px-6 font-semibold">Tên Khách hàng / SĐT</th>
+                                <th class="py-3.5 px-6 font-semibold">Phân loại</th>
+                                <th class="py-3.5 px-6 font-semibold">Địa chỉ giao</th>
+                                <th class="py-3.5 px-6 font-semibold">Thâm niên</th>
+                                <th class="py-3.5 px-6 font-semibold text-right">Tổng bình đã mua</th>
+                                <th class="py-3.5 px-6 font-semibold text-right">Dư nợ hiện tại</th>
+                                <th class="py-3.5 px-6 font-semibold text-right">Hạn mức nợ</th>
+                                <th class="py-3.5 px-6 font-semibold">Trạng thái Ghi nợ</th>
+                                <th class="py-3.5 px-6 font-semibold text-right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-sm divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3.5 px-6">
+                                  <p class="font-medium text-slate-900">Quán Ăn B (Chị Mai)</p>
+                                  <p class="text-slate-500 text-xs font-mono">0912345678 — MST: 0312345678</p>
+                                </td>
+                                <td class="py-3.5 px-6"><span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-semibold">Sỉ B2B</span></td>
+                                <td class="py-3.5 px-6 text-slate-600 text-xs">456 Nguyễn Trãi, Q.5, TP.HCM</td>
+                                <td class="py-3.5 px-6 text-slate-600">2 năm</td>
+                                <td class="py-3.5 px-6 text-right font-semibold text-slate-700">45 bình</td>
+                                <td class="py-3.5 px-6 text-right font-bold text-amber-600">5,000,000đ</td>
+                                <td class="py-3.5 px-6 text-right text-slate-600">10,000,000đ</td>
+                                <td class="py-3.5 px-6">
+                                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium block w-fit mb-1">Đủ ĐK Ghi nợ</span>
+                                    <span class="text-slate-500 text-xs">Trong hạn (15 ngày)</span>
+                                </td>
+                                <td class="py-3.5 px-6 text-right">
+                                  <button class="text-blue-600 hover:text-blue-800 font-medium text-xs" onclick="showCustomerDetail('Quán Ăn B (Chị Mai)', '0912345678', 'Sỉ B2B', '0312345678', '456 Nguyễn Trãi, Q.5', '2 năm', 45, 5000000, 10000000, 'Đủ ĐK Ghi nợ')">Chi tiết & Sửa</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-red-50/40 bg-red-50/20">
+                                <td class="py-3.5 px-6">
+                                  <p class="font-medium text-slate-900">Nhà Hàng D (Anh Dũng)</p>
+                                  <p class="text-slate-500 text-xs font-mono">0934567890 — MST: 0398765432101</p>
+                                </td>
+                                <td class="py-3.5 px-6"><span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-semibold">Sỉ B2B</span></td>
+                                <td class="py-3.5 px-6 text-slate-600 text-xs">789 Lê Lai, Q.1, TP.HCM</td>
+                                <td class="py-3.5 px-6 text-slate-600">1.5 năm</td>
+                                <td class="py-3.5 px-6 text-right font-semibold text-slate-700">120 bình</td>
+                                <td class="py-3.5 px-6 text-right font-bold text-red-600">12,500,000đ</td>
+                                <td class="py-3.5 px-6 text-right text-slate-600">10,000,000đ</td>
+                                <td class="py-3.5 px-6">
+                                    <span class="px-2.5 py-1 bg-red-100 text-red-700 rounded-full text-xs font-semibold block w-fit mb-1">Khóa nợ (>30 ngày)</span>
+                                    <span class="text-red-600 text-xs font-medium">Bắt buộc tất toán COD</span>
+                                </td>
+                                <td class="py-3.5 px-6 text-right">
+                                  <button class="text-blue-600 hover:text-blue-800 font-medium text-xs" onclick="showCustomerDetail('Nhà Hàng D (Anh Dũng)', '0934567890', 'Sỉ B2B', '0398765432101', '789 Lê Lai, Q.1', '1.5 năm', 120, 12500000, 10000000, 'Khóa nợ (>30 ngày)')">Chi tiết & Sửa</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3.5 px-6">
+                                  <p class="font-medium text-slate-900">Nguyễn Văn A</p>
+                                  <p class="text-slate-500 text-xs font-mono">0901234567</p>
+                                </td>
+                                <td class="py-3.5 px-6"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-xs font-semibold">Lẻ B2C</span></td>
+                                <td class="py-3.5 px-6 text-slate-600 text-xs">123 Lê Lợi, Q.1, TP.HCM</td>
+                                <td class="py-3.5 px-6 text-slate-600">3 năm</td>
+                                <td class="py-3.5 px-6 text-right font-semibold text-slate-700">12 bình</td>
+                                <td class="py-3.5 px-6 text-right text-slate-400">0đ</td>
+                                <td class="py-3.5 px-6 text-right font-bold text-slate-700">1,000,000đ</td>
+                                <td class="py-3.5 px-6">
+                                    <span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold block w-fit mb-1" title="Điều kiện B2C: Thâm niên > 1 năm & Sản lượng > 10 bình">Đủ ĐK Ghi nợ Lẻ</span>
+                                    <span class="text-slate-500 text-xs">Hạn mức 1.000.000đ</span>
+                                </td>
+                                <td class="py-3.5 px-6 text-right">
+                                  <button class="text-blue-600 hover:text-blue-800 font-medium text-xs" onclick="showCustomerDetail('Nguyễn Văn A', '0901234567', 'Lẻ B2C', '-', '123 Lê Lợi, Q.1', '3 năm', 12, 0, 1000000, 'Đủ ĐK Ghi nợ Lẻ (Hạn mức 1M)')">Chi tiết & Sửa</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3.5 px-6">
+                                  <p class="font-medium text-slate-900">Tạp Hóa C (Anh Bình)</p>
+                                  <p class="text-slate-500 text-xs font-mono">0987654321</p>
+                                </td>
+                                <td class="py-3.5 px-6"><span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-semibold">Sỉ B2B</span></td>
+                                <td class="py-3.5 px-6 text-slate-600 text-xs">321 Điện Biên Phủ, Q.3</td>
+                                <td class="py-3.5 px-6 text-slate-600">6 tháng</td>
+                                <td class="py-3.5 px-6 text-right font-semibold text-slate-700">5 bình</td>
+                                <td class="py-3.5 px-6 text-right text-slate-400">0đ</td>
+                                <td class="py-3.5 px-6 text-right text-slate-400">0đ</td>
+                                <td class="py-3.5 px-6">
+                                    <span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-medium block w-fit" title="Điều kiện B2B: Thâm niên > 1 năm & Sản lượng > 20 bình">Chưa đủ ĐK ghi nợ</span>
+                                    <span class="text-slate-400 text-xs">Cần >1 năm & >20 bình</span>
+                                </td>
+                                <td class="py-3.5 px-6 text-right">
+                                  <button class="text-blue-600 hover:text-blue-800 font-medium text-xs" onclick="showCustomerDetail('Tạp Hóa C (Anh Bình)', '0987654321', 'Sỉ B2B', '-', '321 Điện Biên Phủ, Q.3', '6 tháng', 5, 0, 0, 'Chưa đủ ĐK ghi nợ')">Chi tiết & Sửa</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab Content: VAT -->
+        <div id="tab-vat" class="hidden">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 max-w-2xl text-left">
+                <div class="border-b border-slate-200 pb-3 mb-4">
+                  <h3 class="text-lg font-bold text-slate-800">Cấu hình Đơn vị Xuất Hóa đơn VAT Điện tử (Đại lý)</h3>
+                  <p class="text-xs text-slate-500">Thông tin đại lý hiển thị trên hóa đơn tài chính xuất cho khách hàng sỉ B2B</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="grid grid-cols-2 gap-4">
+                      <div>
+                          <label class="block text-sm font-medium text-slate-700 mb-1">Mã số thuế (10 hoặc 13 số) <span class="text-red-500">*</span></label>
+                          <input type="text" id="vatMST" value="0312345678" placeholder="VD: 0312345678" class="w-full border border-slate-300 rounded-lg p-2 font-mono text-sm">
+                          <p id="mstError" class="text-red-600 text-xs mt-1 hidden">MST phải đúng 10 hoặc 13 chữ số</p>
+                      </div>
+                      <div>
+                          <label class="block text-sm font-medium text-slate-700 mb-1">Tên Đại lý / Công ty <span class="text-red-500">*</span></label>
+                          <input type="text" id="vatName" value="Công Ty TNHH Gas Pro Trading Việt Nam" placeholder="VD: Công ty TNHH ABC" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                          <p id="nameError" class="text-red-600 text-xs mt-1 hidden">Vui lòng nhập tên công ty</p>
+                      </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">Địa chỉ đăng ký kinh doanh VAT <span class="text-red-500">*</span></label>
+                        <textarea id="vatAddress" rows="2" placeholder="Địa chỉ đăng ký kinh doanh..." class="w-full border border-slate-300 rounded-lg p-2 text-sm">123 Nguyễn Trãi, Phường 2, Quận 5, TP. Hồ Chí Minh</textarea>
+                        <p id="addrError" class="text-red-600 text-xs mt-1 hidden">Vui lòng nhập địa chỉ trụ sở</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                      <div>
+                          <label class="block text-sm font-medium text-slate-700 mb-1">Email nhận Hóa đơn HĐĐT</label>
+                          <input type="email" value="ketoan@gaspro.vn" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                      </div>
+                      <div>
+                          <label class="block text-sm font-medium text-slate-700 mb-1">Ký hiệu Mẫu hóa đơn (Serial)</label>
+                          <input type="text" value="1C26TBB" class="w-full border border-slate-300 rounded-lg p-2 font-mono text-sm">
+                      </div>
+                    </div>
+
+                    <button class="bg-blue-600 text-white px-5 py-2.5 rounded-xl hover:bg-blue-700 text-sm font-medium transition-colors mt-2" onclick="saveVAT()">Lưu Cấu hình VAT</button>
+                </div>
+            </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    initPage('Quản lý Khách hàng & Công nợ', [{label: 'Quản lý Khách hàng & Công nợ'}]);
+    
+    function switchTab(tabId, el) {
+        document.getElementById('tab-customers').classList.add('hidden');
+        document.getElementById('tab-vat').classList.add('hidden');
+        document.getElementById('tab-' + tabId).classList.remove('hidden');
+        
+        document.querySelectorAll('.tab-btn').forEach(l => {
+            l.classList.remove('border-blue-600', 'text-blue-600', 'font-semibold');
+            l.classList.add('border-transparent', 'text-slate-500');
+        });
+        el.classList.add('border-blue-600', 'text-blue-600', 'font-semibold');
+        el.classList.remove('border-transparent', 'text-slate-500');
+    }
+
+    function openAddCustomerModal() {
+        const body = `
+            <div class="space-y-4 text-left">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Tên Khách / Tên Cửa hàng <span class="text-red-500">*</span></label>
+                      <input type="text" id="addCustName" placeholder="VD: Quán Cơm Tấm A (Chị Hà)" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Số điện thoại <span class="text-red-500">*</span></label>
+                      <input type="tel" id="addCustPhone" placeholder="VD: 0912999888" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-mono">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Phân loại Khách hàng <span class="text-red-500">*</span></label>
+                      <select id="addCustType" onchange="toggleB2BFields('addCustType', 'b2bGroup')" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                        <option value="B2B">Khách sỉ B2B (Nhà hàng / Quán ăn / Khách sạn)</option>
+                        <option value="B2C">Khách lẻ B2C (Hộ gia đình)</option>
+                      </select>
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Email liên hệ</label>
+                      <input type="email" id="addCustEmail" placeholder="khachhang@gmail.com" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                  </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Địa chỉ giao hàng mặc định <span class="text-red-500">*</span></label>
+                    <input type="text" id="addCustAddr" placeholder="Số nhà, tên đường, phường/xã, quận/huyện..." class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                </div>
+
+                <!-- B2B Fields -->
+                <div id="b2bGroup" class="p-4 bg-slate-50 border border-slate-200 rounded-xl space-y-3">
+                    <h4 class="text-xs font-bold uppercase tracking-wider text-blue-900">Thông tin Công nợ B2B & VAT Hóa đơn</h4>
+                    <div class="grid grid-cols-2 gap-4">
+                      <div>
+                          <label class="block text-xs font-medium text-slate-700 mb-1">Mã số thuế (MST)</label>
+                          <input type="text" id="addCustMST" placeholder="VD: 0399887766" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-mono">
+                      </div>
+                      <div>
+                          <label class="block text-xs font-medium text-slate-700 mb-1">Hạn mức công nợ tối đa (VNĐ)</label>
+                          <input type="number" id="addCustDebtLimit" value="10000000" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-bold text-blue-900">
+                      </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Tên công ty xuất hóa đơn VAT</label>
+                        <input type="text" id="addCustCompName" placeholder="Tên đăng ký trên giấy phép KD..." class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                    </div>
+                </div>
+            </div>
+        `;
+        const footer = `
+            <button class="px-4 py-2 bg-slate-200 text-slate-800 text-sm font-medium rounded-lg mr-2 hover:bg-slate-300" onclick="closeModal()">Hủy</button>
+            <button class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700" onclick="confirmAddCustomer()">Lưu Hồ sơ Khách hàng</button>
+        `;
+        showModal('Thêm Hồ sơ Khách hàng mới', body, footer);
+    }
+
+    function toggleB2BFields(selectId, targetId) {
+        const val = document.getElementById(selectId).value;
+        const target = document.getElementById(targetId);
+        if (val === 'B2B') {
+            target.classList.remove('hidden');
+        } else {
+            target.classList.add('hidden');
+        }
+    }
+
+    function confirmAddCustomer() {
+        const name = document.getElementById('addCustName').value.trim();
+        const phone = document.getElementById('addCustPhone').value.trim();
+        const addr = document.getElementById('addCustAddr').value.trim();
+
+        if (!name || !phone || !addr) {
+            showToast('Vui lòng điền Tên, Số điện thoại và Địa chỉ giao hàng!', 'error');
+            return;
+        }
+
+        closeModal();
+        showToast(`Đã thêm khách hàng "${name}" thành công!`, 'success');
+    }
+
+    function showCustomerDetail(name, phone, type, mst, addr, seniority, totalBought, debt, limit, creditStatus) {
+        const body = `
+            <div class="space-y-4 text-left">
+                <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl">
+                  <div class="flex justify-between items-start">
+                    <div>
+                      <h3 class="font-bold text-slate-900 text-base">${name}</h3>
+                      <p class="text-slate-500 text-xs font-mono mt-0.5">SĐT: ${phone} | MST: ${mst}</p>
+                      <p class="text-slate-600 text-xs mt-1">📍 Địa chỉ: ${addr}</p>
+                    </div>
+                    <span class="px-2.5 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold">${type}</span>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-3 gap-3 text-xs">
+                  <div class="p-3 bg-slate-100 rounded-lg border border-slate-200">
+                    <span class="text-slate-500 block">Thâm niên:</span>
+                    <strong class="text-slate-800 text-sm">${seniority}</strong>
+                  </div>
+                  <div class="p-3 bg-slate-100 rounded-lg border border-slate-200">
+                    <span class="text-slate-500 block">Tổng bình đã mua:</span>
+                    <strong class="text-slate-800 text-sm">${totalBought} bình</strong>
+                  </div>
+                  <div class="p-3 bg-slate-100 rounded-lg border border-slate-200">
+                    <span class="text-slate-500 block">Dư nợ hiện tại:</span>
+                    <strong class="text-red-600 text-sm">${fmtMoney(debt)}</strong>
+                  </div>
+                </div>
+
+                <div class="border-t border-slate-200 pt-3">
+                  <h4 class="text-xs font-bold text-slate-800 mb-2">Điều chỉnh Trạng thái Ghi nợ & Hạn mức</h4>
+                  <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Trạng thái Ghi nợ</label>
+                        <select id="editCreditStatus" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-medium">
+                          <option value="NORMAL" ${creditStatus.includes('Đủ')?'selected':''}>Đủ điều kiện ghi nợ (Bình thường)</option>
+                          <option value="OVERLIMIT" ${creditStatus.includes('Vượt')?'selected':''}>Tạm dừng ghi nợ (Vượt hạn mức)</option>
+                          <option value="LOCKED" ${creditStatus.includes('Khóa')?'selected':''}>Khóa nợ bắt buộc COD (>30 ngày)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Hạn mức nợ (VNĐ)</label>
+                        <input type="number" id="editDebtLimit" value="${limit}" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-bold text-blue-900">
+                    </div>
+                  </div>
+                </div>
+            </div>
+        `;
+        const footer = `
+            <button class="px-4 py-2 bg-slate-200 text-slate-800 text-sm font-medium rounded-lg mr-2 hover:bg-slate-300" onclick="closeModal()">Đóng</button>
+            <button class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700" onclick="closeModal(); showToast('Đã lưu điều chỉnh công nợ khách hàng', 'success')">Lưu thay đổi</button>
+        `;
+        showModal(`Hồ sơ Chi tiết — ${name}`, body, footer);
+    }
+
+    function saveVAT() {
+        const mst = document.getElementById('vatMST').value.trim();
+        const name = document.getElementById('vatName').value.trim();
+        const addr = document.getElementById('vatAddress').value.trim();
+        
+        let valid = true;
+        const mstRegex = /^([0-9]{10}|[0-9]{13})$/;
+        
+        if(!mstRegex.test(mst)) { document.getElementById('mstError').classList.remove('hidden'); valid = false; }
+        else { document.getElementById('mstError').classList.add('hidden'); }
+        
+        if(!name) { document.getElementById('nameError').classList.remove('hidden'); valid = false; }
+        else { document.getElementById('nameError').classList.add('hidden'); }
+        
+        if(!addr) { document.getElementById('addrError').classList.remove('hidden'); valid = false; }
+        else { document.getElementById('addrError').classList.add('hidden'); }
+        
+        if(valid) {
+            showToast('Lưu cấu hình hóa đơn VAT đại lý thành công!', 'success');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+  </script>
+</body>
+</html>

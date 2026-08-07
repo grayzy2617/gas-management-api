@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Dashboard Tổng quan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6 space-y-6">
+        
+        <!-- ROW 1: 4 Stat Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex items-center">
+                <div class="p-3 bg-blue-100 text-blue-600 rounded-lg"><i data-lucide="dollar-sign"></i></div>
+                <div class="ml-4">
+                    <p class="text-sm text-slate-500">Doanh thu hôm nay</p>
+                    <p class="text-xl font-bold text-slate-800">15,800,000đ</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex items-center">
+                <div class="p-3 bg-green-100 text-green-600 rounded-lg"><i data-lucide="shopping-cart"></i></div>
+                <div class="ml-4">
+                    <p class="text-sm text-slate-500">Đơn hàng</p>
+                    <p class="text-xl font-bold text-slate-800">42</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex items-center">
+                <div class="p-3 bg-purple-100 text-purple-600 rounded-lg"><i data-lucide="truck"></i></div>
+                <div class="ml-4">
+                    <p class="text-sm text-slate-500">Tài xế online</p>
+                    <p class="text-xl font-bold text-slate-800">6/8</p>
+                </div>
+            </div>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4 flex items-center">
+                <div class="p-3 bg-orange-100 text-orange-600 rounded-lg"><i data-lucide="alert-circle"></i></div>
+                <div class="ml-4">
+                    <p class="text-sm text-slate-500">Công nợ khách</p>
+                    <p class="text-xl font-bold text-slate-800">12,500,000đ</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROW 2: Widget Cảnh báo Đỏ -->
+        <div class="bg-red-50 border border-red-500 rounded-xl p-4 flex items-start shadow-sm">
+            <div class="text-red-500 mt-1"><i data-lucide="alert-triangle"></i></div>
+            <div class="ml-3">
+                <h3 class="text-red-800 font-bold">Cảnh báo tồn kho vỏ bình</h3>
+                <p class="text-red-700 mt-1">Vỏ bình PG rỗng còn 9 (Mức an toàn: 10) — Cần nhập thêm vỏ!</p>
+            </div>
+        </div>
+
+        <!-- ROW 3 & 4: Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Biểu đồ dòng tiền -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                <h3 class="text-lg font-bold text-slate-800 mb-4">Dòng tiền 7 ngày qua</h3>
+                <canvas id="cashflowChart" height="200"></canvas>
+            </div>
+            <!-- Biểu đồ sản phẩm bán chạy -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-4">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-bold text-slate-800">Top Sản Phẩm Bán Chạy</h3>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 text-sm bg-blue-50 text-blue-600 rounded-lg border border-blue-200" onclick="updateBarChart('qty')">Theo số lượng</button>
+                        <button class="px-3 py-1 text-sm bg-slate-50 text-slate-600 hover:bg-slate-100 rounded-lg border border-slate-200" onclick="updateBarChart('rev')">Theo doanh thu</button>
+                    </div>
+                </div>
+                <canvas id="topProductsChart" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- ROW 5: Bảng nhắc nợ -->
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="px-6 py-4 border-b border-slate-200">
+                <h3 class="text-lg font-bold text-slate-800">Khách hàng quá hạn nợ</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 text-sm border-b border-slate-200">
+                            <th class="py-3 px-6 font-medium">Khách hàng</th>
+                            <th class="py-3 px-6 font-medium">SĐT</th>
+                            <th class="py-3 px-6 font-medium">Số ngày quá hạn</th>
+                            <th class="py-3 px-6 font-medium">Số tiền nợ</th>
+                            <th class="py-3 px-6 font-medium text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="border-b border-slate-100 hover:bg-slate-50">
+                            <td class="py-3 px-6 text-slate-800">Nguyễn Văn A</td>
+                            <td class="py-3 px-6 text-slate-600">0901234567</td>
+                            <td class="py-3 px-6 text-red-600">15 ngày</td>
+                            <td class="py-3 px-6 text-slate-800 font-medium">2,500,000đ</td>
+                            <td class="py-3 px-6 text-right">
+                                <button class="px-3 py-1 bg-orange-100 text-orange-600 hover:bg-orange-200 rounded-lg text-sm flex inline-flex items-center" onclick="remindDebt('Nguyễn Văn A')">
+                                    <i data-lucide="bell" class="w-4 h-4 mr-1"></i> Gửi nhắc nợ
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50">
+                            <td class="py-3 px-6 text-slate-800">Quán Ăn B</td>
+                            <td class="py-3 px-6 text-slate-600">0912345678</td>
+                            <td class="py-3 px-6 text-red-600">8 ngày</td>
+                            <td class="py-3 px-6 text-slate-800 font-medium">5,000,000đ</td>
+                            <td class="py-3 px-6 text-right">
+                                <button class="px-3 py-1 bg-orange-100 text-orange-600 hover:bg-orange-200 rounded-lg text-sm flex inline-flex items-center" onclick="remindDebt('Quán Ăn B')">
+                                    <i data-lucide="bell" class="w-4 h-4 mr-1"></i> Gửi nhắc nợ
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50">
+                            <td class="py-3 px-6 text-slate-800">Trần Thị C</td>
+                            <td class="py-3 px-6 text-slate-600">0987654321</td>
+                            <td class="py-3 px-6 text-red-600">3 ngày</td>
+                            <td class="py-3 px-6 text-slate-800 font-medium">1,200,000đ</td>
+                            <td class="py-3 px-6 text-right">
+                                <button class="px-3 py-1 bg-orange-100 text-orange-600 hover:bg-orange-200 rounded-lg text-sm flex inline-flex items-center" onclick="remindDebt('Trần Thị C')">
+                                    <i data-lucide="bell" class="w-4 h-4 mr-1"></i> Gửi nhắc nợ
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-slate-100 hover:bg-slate-50">
+                            <td class="py-3 px-6 text-slate-800">Nhà Hàng D</td>
+                            <td class="py-3 px-6 text-slate-600">0934567890</td>
+                            <td class="py-3 px-6 text-red-600">12 ngày</td>
+                            <td class="py-3 px-6 text-slate-800 font-medium">8,500,000đ</td>
+                            <td class="py-3 px-6 text-right">
+                                <button class="px-3 py-1 bg-orange-100 text-orange-600 hover:bg-orange-200 rounded-lg text-sm flex inline-flex items-center" onclick="remindDebt('Nhà Hàng D')">
+                                    <i data-lucide="bell" class="w-4 h-4 mr-1"></i> Gửi nhắc nợ
+                                </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3 px-6 text-slate-800">Lê Văn E</td>
+                            <td class="py-3 px-6 text-slate-600">0945678901</td>
+                            <td class="py-3 px-6 text-red-600">5 ngày</td>
+                            <td class="py-3 px-6 text-slate-800 font-medium">3,000,000đ</td>
+                            <td class="py-3 px-6 text-right">
+                                <button class="px-3 py-1 bg-orange-100 text-orange-600 hover:bg-orange-200 rounded-lg text-sm flex inline-flex items-center" onclick="remindDebt('Lê Văn E')">
+                                    <i data-lucide="bell" class="w-4 h-4 mr-1"></i> Gửi nhắc nợ
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    initPage('Dashboard Tổng quan', [{label: 'Dashboard Tổng quan'}]);
+    
+    function remindDebt(name) {
+        showToast('Đã gửi thông báo nhắc nợ đến ' + name, 'success');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { 
+        lucide.createIcons(); 
+        
+        // Init Line Chart
+        const ctxLine = document.getElementById('cashflowChart').getContext('2d');
+        new Chart(ctxLine, {
+            type: 'line',
+            data: {
+                labels: ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'],
+                datasets: [
+                    { label: 'Thực thu', data: [12, 15, 11, 18, 14, 16, 15.8], borderColor: '#16A34A', backgroundColor: 'transparent', tension: 0.3 },
+                    { label: 'Thực chi', data: [8, 9, 7, 12, 10, 11, 9.5], borderColor: '#DC2626', backgroundColor: 'transparent', tension: 0.3 }
+                ]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+
+        // Init Bar Chart
+        const ctxBar = document.getElementById('topProductsChart').getContext('2d');
+        window.barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: ['PG 12kg', 'PG 50kg', 'Bếp Rinnai', 'Van Namilux', 'Dây Petro'],
+                datasets: [{
+                    label: 'Số lượng',
+                    data: [145, 67, 23, 45, 38],
+                    backgroundColor: '#3B82F6'
+                }]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+        });
+    });
+
+    function updateBarChart(type) {
+        if(type === 'qty') {
+            window.barChart.data.datasets[0].label = 'Số lượng';
+            window.barChart.data.datasets[0].data = [145, 67, 23, 45, 38];
+            window.barChart.data.datasets[0].backgroundColor = '#3B82F6';
+        } else {
+            window.barChart.data.datasets[0].label = 'Doanh thu (Tr VNĐ)';
+            window.barChart.data.datasets[0].data = [60.9, 77.0, 64.4, 4.5, 3.8];
+            window.barChart.data.datasets[0].backgroundColor = '#8B5CF6';
+        }
+        window.barChart.update();
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Quản lý Bảo hành & Đổi trả</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6">
+        
+        <div class="mb-6 flex space-x-6 border-b border-slate-200">
+            <button class="tab-btn active pb-3 px-1 border-b-2 border-blue-600 text-blue-600 font-semibold text-sm transition-colors" onclick="switchTab('parts-warranty', this)">Duyệt Phát Sinh Linh Kiện (WR-004)</button>
+            <button class="tab-btn pb-3 px-1 text-slate-500 hover:text-blue-800 border-b-2 border-transparent text-sm transition-colors" onclick="switchTab('7days-return', this)">Duyệt Đổi Trả 7 Ngày Lỗi Kỹ Thuật (WR-006)</button>
+        </div>
+
+        <!-- Tab 1: Duyệt phát sinh linh kiện -->
+        <div id="parts-warranty" class="tab-content active space-y-4">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden text-left">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <div>
+                      <h2 class="font-bold text-slate-800 text-base">Yêu cầu Duyệt Đề Xuất Thay Linh Kiện Phát Sinh</h2>
+                      <p class="text-xs text-slate-500">Tài xế kiểm tra bếp tại nhà khách, phát hiện linh kiện hỏng cần thay và đề xuất báo giá qua Tổng đài</p>
+                    </div>
+                    <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-xs font-bold">2 Yêu cầu chờ duyệt</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="px-6 py-3 font-semibold">Mã ticket</th>
+                                <th class="px-6 py-3 font-semibold">Khách hàng</th>
+                                <th class="px-6 py-3 font-semibold">Tài xế kiểm tra</th>
+                                <th class="px-6 py-3 font-semibold">Linh kiện đề xuất</th>
+                                <th class="px-6 py-3 font-semibold text-right">Đơn giá linh kiện</th>
+                                <th class="px-6 py-3 font-semibold text-right">Công thay lắp</th>
+                                <th class="px-6 py-3 font-semibold text-right">Tổng báo khách</th>
+                                <th class="px-6 py-3 font-semibold">Tồn linh kiện xe</th>
+                                <th class="px-6 py-3 font-semibold">Trạng thái</th>
+                                <th class="px-6 py-3 font-semibold text-right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-mono font-bold text-blue-600">TKT-1001</td>
+                                <td class="px-6 py-4 font-medium text-slate-900">Nguyễn Văn A (0901234567)</td>
+                                <td class="px-6 py-4 font-medium text-slate-700">Lê Minh Tuấn</td>
+                                <td class="px-6 py-4 font-bold text-orange-600">IC đánh lửa bếp Rinnai (1 cái)</td>
+                                <td class="px-6 py-4 text-right text-slate-600">150,000đ</td>
+                                <td class="px-6 py-4 text-right text-slate-600">50,000đ</td>
+                                <td class="px-6 py-4 text-right font-bold text-blue-900">200,000đ</td>
+                                <td class="px-6 py-4"><span class="px-2 py-0.5 bg-green-100 text-green-700 rounded text-xs font-semibold">Còn 10 cái trên xe</span></td>
+                                <td class="px-6 py-4"><span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full font-bold">Chờ tổng đài duyệt</span></td>
+                                <td class="px-6 py-4 text-right space-x-1">
+                                    <button class="bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-bold text-xs shadow-sm" onclick="approvePart('TKT-1001', 'Nguyễn Văn A', 'Lê Minh Tuấn', 'IC đánh lửa bếp Rinnai', 150000, 50000, 'Còn 10 cái trên xe')">Duyệt Báo Giá</button>
+                                    <button class="bg-red-100 text-red-700 px-2.5 py-1.5 rounded-lg hover:bg-red-200 font-medium text-xs" onclick="rejectPart('TKT-1001')">Từ chối</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-mono font-bold text-blue-600">TKT-1002</td>
+                                <td class="px-6 py-4 font-medium text-slate-900">Trần Thị B (0912345678)</td>
+                                <td class="px-6 py-4 font-medium text-slate-700">Phạm Hùng</td>
+                                <td class="px-6 py-4 font-bold text-orange-600">Dây dẫn gas 3 lớp lõi inox (1.5m)</td>
+                                <td class="px-6 py-4 text-right text-slate-600">85,000đ</td>
+                                <td class="px-6 py-4 text-right text-slate-600">30,000đ</td>
+                                <td class="px-6 py-4 text-right font-bold text-blue-900">115,000đ</td>
+                                <td class="px-6 py-4"><span class="px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-xs font-semibold">Hết trên xe (Cần về kho)</span></td>
+                                <td class="px-6 py-4"><span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full font-bold">Chờ tổng đài duyệt</span></td>
+                                <td class="px-6 py-4 text-right space-x-1">
+                                    <button class="bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 font-bold text-xs shadow-sm" onclick="approvePart('TKT-1002', 'Trần Thị B', 'Phạm Hùng', 'Dây dẫn gas 3 lớp lõi inox', 85000, 30000, 'Hết trên xe — Cho về kho lấy')">Duyệt Báo Giá</button>
+                                    <button class="bg-red-100 text-red-700 px-2.5 py-1.5 rounded-lg hover:bg-red-200 font-medium text-xs" onclick="rejectPart('TKT-1002')">Từ chối</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-mono font-bold text-blue-600">TKT-0998</td>
+                                <td class="px-6 py-4 font-medium text-slate-900">Lê Văn C</td>
+                                <td class="px-6 py-4 font-medium text-slate-700">Nguyễn Văn D</td>
+                                <td class="px-6 py-4 text-slate-800">Van ngắt tự động Namilux</td>
+                                <td class="px-6 py-4 text-right text-slate-600">150,000đ</td>
+                                <td class="px-6 py-4 text-right text-slate-600">50,000đ</td>
+                                <td class="px-6 py-4 text-right font-bold text-slate-800">200,000đ</td>
+                                <td class="px-6 py-4"><span class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded text-xs">Đã xuất xe</span></td>
+                                <td class="px-6 py-4"><span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full font-bold">Khách đã đồng ý & Lắp</span></td>
+                                <td class="px-6 py-4 text-right text-slate-400">Hoàn thành</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tab 2: Duyệt đổi trả 7 ngày (WR-006) -->
+        <div id="7days-return" class="tab-content space-y-4">
+            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg max-w-5xl text-left">
+                <div class="flex items-center">
+                    <i data-lucide="info" class="h-5 w-5 text-blue-600 flex-shrink-0 mr-3"></i>
+                    <div class="text-xs text-blue-900">
+                        <strong class="font-bold block text-sm">QUY TRÌNH ĐỔI TRẢ THIẾT BỊ LỖI KỸ THUẬT TRONG 7 NGÀY (WR-006):</strong>
+                        <span>Chỉ áp dụng đổi trả 1-đổi-1 miễn phí đối với thiết bị bị lỗi từ Nhà sản xuất. Khi tài xế tới nhà khách kiểm tra thực tế: Nếu bếp vỡ móp do khách làm rơi ➔ Từ chối đổi trả miễn phí và chuyển sang bảo hành sửa chữa tính phí.</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden text-left">
+                <div class="px-6 py-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center">
+                    <h2 class="font-bold text-slate-800 text-base">Danh sách Yêu cầu Đổi trả Sản phẩm Lỗi 7 Ngày</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead class="bg-slate-100 text-slate-600 border-b border-slate-200 uppercase tracking-wider">
+                            <tr>
+                                <th class="px-6 py-3 font-semibold">Mã đơn mua</th>
+                                <th class="px-6 py-3 font-semibold">Khách hàng</th>
+                                <th class="px-6 py-3 font-semibold">Sản phẩm yêu cầu đổi</th>
+                                <th class="px-6 py-3 font-semibold">Ngày mua</th>
+                                <th class="px-6 py-3 font-semibold">Ngày yêu cầu</th>
+                                <th class="px-6 py-3 font-semibold">Ảnh minh chứng lỗi</th>
+                                <th class="px-6 py-3 font-semibold">Lý do báo lỗi</th>
+                                <th class="px-6 py-3 font-semibold">Trạng thái duyệt</th>
+                                <th class="px-6 py-3 font-semibold text-right">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-mono font-bold text-blue-600">ORD-0501</td>
+                                <td class="px-6 py-4 font-medium text-slate-900">Vũ Thị Lan (0988776655)</td>
+                                <td class="px-6 py-4 font-bold text-slate-800">Bếp Gas Rinnai RV-365 Đôi</td>
+                                <td class="px-6 py-4 text-slate-600">01/08/2026</td>
+                                <td class="px-6 py-4 text-slate-600 font-semibold">03/08/2026 (Ngày thứ 2)</td>
+                                <td class="px-6 py-4 text-blue-600 cursor-pointer font-semibold hover:underline">
+                                    <div class="flex items-center gap-1">
+                                        <i data-lucide="image" class="w-4 h-4"></i> Xem 2 ảnh lỗi
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-slate-600">Lỗi IC đánh lửa liên tục không tắt được</td>
+                                <td class="px-6 py-4"><span class="px-2.5 py-1 bg-orange-100 text-orange-700 rounded-full font-bold">Chờ duyệt đổi</span></td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="bg-blue-600 text-white px-3.5 py-1.5 rounded-lg hover:bg-blue-700 font-bold text-xs shadow-sm" onclick="approveReturn('ORD-0501', 'Vũ Thị Lan', 'Bếp Gas Rinnai RV-365 Đôi')">Duyệt Lệnh Đổi Trả</button>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="px-6 py-4 font-mono font-bold text-blue-600">ORD-0512</td>
+                                <td class="px-6 py-4 font-medium text-slate-900">Ngô Văn Nam</td>
+                                <td class="px-6 py-4 font-bold text-slate-800">Van điều áp Namilux</td>
+                                <td class="px-6 py-4 text-slate-600">02/08/2026</td>
+                                <td class="px-6 py-4 text-slate-600 font-semibold">03/08/2026 (Ngày thứ 1)</td>
+                                <td class="px-6 py-4">
+                                    <span class="px-2 py-0.5 bg-red-100 text-red-700 rounded font-bold text-[11px]">Chưa đính kèm ảnh</span>
+                                </td>
+                                <td class="px-6 py-4 text-slate-600">Rò rỉ khí gas tại ren vặn</td>
+                                <td class="px-6 py-4"><span class="px-2.5 py-1 bg-red-100 text-red-700 rounded-full font-bold">Thiếu minh chứng</span></td>
+                                <td class="px-6 py-4 text-right">
+                                    <button class="bg-slate-200 text-slate-400 px-3 py-1.5 rounded-lg font-medium text-xs cursor-not-allowed" title="Bắt buộc có ảnh/video minh chứng mới cho duyệt" disabled>Duyệt Đổi Trả</button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    initPage('Bảo hành & Đổi trả', [{label: 'Bảo hành & Đổi trả'}]);
+
+    function switchTab(tabId, btn) {
+        document.querySelectorAll('.tab-content').forEach(el => {
+          el.classList.remove('active');
+          el.style.display = 'none';
+        });
+        document.querySelectorAll('.tab-btn').forEach(el => {
+            el.classList.remove('active', 'border-blue-600', 'text-blue-600', 'font-semibold');
+            el.classList.add('border-transparent', 'text-slate-500');
+        });
+        const target = document.getElementById(tabId);
+        if (target) {
+            target.classList.add('active');
+            target.style.display = 'block';
+        }
+        if (btn) {
+            btn.classList.add('active', 'border-blue-600', 'text-blue-600', 'font-semibold');
+            btn.classList.remove('border-transparent', 'text-slate-500');
+        }
+        try { if(window.lucide) lucide.createIcons(); } catch(e){}
+    }
+
+    function approvePart(ticketId, custName, driverName, partName, partPrice, laborPrice, stockStatus) {
+        const total = partPrice + laborPrice;
+        const modalHtml = `
+            <div class="space-y-4 text-left text-xs">
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                  <h4 class="font-bold text-slate-900 text-sm mb-0.5">Xác nhận Duyệt Báo Giá Linh Kiện ${ticketId}</h4>
+                  <p class="text-slate-600">Khách hàng: <strong>${custName}</strong> | Tài xế kiểm tra: <strong>${driverName}</strong></p>
+                </div>
+
+                <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg space-y-1">
+                    <p class="flex justify-between"><span>Tên linh kiện đề xuất:</span> <strong>${partName}</strong></p>
+                    <p class="flex justify-between"><span>Giá linh kiện:</span> <span>${fmtMoney(partPrice)}</span></p>
+                    <p class="flex justify-between"><span>Công thay lắp đặt:</span> <span>${fmtMoney(laborPrice)}</span></p>
+                    <div class="border-t border-blue-200 pt-1 flex justify-between font-bold text-sm text-blue-900">
+                      <span>Tổng báo khách hàng:</span> <span>${fmtMoney(total)}</span>
+                    </div>
+                </div>
+
+                <div class="p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-900">
+                  <i data-lucide="package" class="w-4 h-4 inline mr-1 text-emerald-600"></i> Tình trạng kho di động: <strong>${stockStatus}</strong>
+                </div>
+
+                <div class="p-2.5 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-900">
+                  <i data-lucide="info" class="w-4 h-4 inline mr-1 text-yellow-600"></i> Sau khi Tổng đài bấm duyệt, hệ thống sẽ tự động gửi thông báo tin nhắn Zalo/SMS tới khách hàng để khách xác nhận đồng ý báo giá trước khi tài xế tiến hành lắp.
+                </div>
+            </div>
+        `;
+        const footerHtml = `
+            <button onclick="closeModal()" class="px-4 py-2 text-slate-600 bg-slate-100 text-xs font-medium rounded-lg hover:bg-slate-200">Hủy</button>
+            <button onclick="closeModal(); showToast('Đã duyệt báo giá! Đã gửi thông báo Zalo/SMS cho khách xác nhận.', 'success');" class="px-4 py-2 text-white bg-blue-600 text-xs font-bold rounded-lg hover:bg-blue-700">Duyệt Báo Giá & Gửi Thông Báo Khách</button>
+        `;
+        showModal(`Duyệt Phát Sinh Linh Kiện — ${ticketId}`, modalHtml, footerHtml);
+    }
+
+    function rejectPart(ticketId) {
+        showConfirm('Từ chối thay thế', `Bạn có chắc chắn từ chối yêu cầu thay thế linh kiện cho ticket ${ticketId}? Hệ thống sẽ thông báo tài xế lắp lại linh kiện cũ cho khách.`, () => {
+            showToast('Đã từ chối đề xuất! Thông báo tài xế lắp lại đồ cũ.', 'warning');
+        });
+    }
+
+    function approveReturn(orderId, custName, prodName) {
+        const modalHtml = `
+            <div class="space-y-4 text-left text-xs">
+                <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <h4 class="font-bold text-blue-900 text-sm mb-1">Duyệt Yêu Cầu Đổi Trả Sản Phẩm Lỗi 7 Ngày</h4>
+                  <p class="text-slate-700">Đơn mua: <strong>${orderId}</strong> | Khách hàng: <strong>${custName}</strong></p>
+                  <p class="text-slate-900 font-bold mt-0.5">Sản phẩm đổi mới 100%: ${prodName}</p>
+                </div>
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg">
+                  <strong class="text-slate-800 block mb-1">Phương án điều phối:</strong>
+                  <p class="text-slate-600">Hệ thống sẽ tự động xuất 01 sản phẩm mới từ kho đại lý và điều tài xế gần nhất tới nhà khách để giao sản phẩm mới + thu hồi bếp lỗi về kho kiểm định.</p>
+                </div>
+            </div>
+        `;
+        const footerHtml = `
+            <button onclick="closeModal()" class="px-4 py-2 text-slate-600 bg-slate-100 text-xs font-medium rounded-lg hover:bg-slate-200">Hủy</button>
+            <button onclick="closeModal(); showToast('Đã duyệt đổi trả! Tạo lệnh xuất sản phẩm mới & điều tài xế đi đổi.', 'success');" class="px-4 py-2 text-white bg-blue-600 text-xs font-bold rounded-lg hover:bg-blue-700">Xác Nhận Duyệt Đổi Trả</button>
+        `;
+        showModal(`Duyệt Đổi Trả — ${orderId}`, modalHtml, footerHtml);
+    }
+  </script>
+</body>
+</html>

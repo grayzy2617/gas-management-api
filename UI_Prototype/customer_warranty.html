@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Bảo hành Sản phẩm</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6">
+        
+        <!-- Tabs -->
+        <div class="flex gap-4 border-b border-slate-200 mb-6">
+          <button id="tabBtn1" class="px-4 py-3 text-sm font-medium border-b-2 border-blue-600 text-blue-600 focus:outline-none transition-colors">
+            Gửi yêu cầu Bảo hành
+          </button>
+          <button id="tabBtn2" class="px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700 focus:outline-none transition-colors">
+            Bếp đang mượn
+          </button>
+        </div>
+
+        <!-- Tab 1 Content -->
+        <div id="tab1">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Form -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
+              <h2 class="text-lg font-bold text-slate-900 mb-4">Tạo yêu cầu mới</h2>
+              
+              <div id="fileError" class="mb-4 bg-red-50 border border-red-200 text-red-700 p-3 rounded-lg text-sm hidden flex items-start gap-2">
+                <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0"></i>
+                Bắt buộc đính kèm ảnh hoặc video (dưới 10 giây) để kỹ thuật viên xem trước
+              </div>
+              
+              <div id="warrantyError" class="mb-4 bg-orange-50 border border-orange-200 text-orange-700 p-3 rounded-lg text-sm hidden flex items-start gap-2">
+                <i data-lucide="info" class="w-5 h-5 flex-shrink-0"></i>
+                <div>
+                  Sản phẩm đã hết hạn bảo hành 12 tháng. Bạn có thể <a href="#" class="font-bold underline">gửi yêu cầu sửa chữa tính phí.</a>
+                </div>
+              </div>
+
+              <form id="warrantyForm" class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">Sản phẩm cần bảo hành</label>
+                  <select id="productSelect" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="in_warranty">Bếp gas Rinnai RV-365 (Mua 15/01/2026 — Còn bảo hành)</option>
+                    <option value="out_warranty">Bếp gas Namilux NA-300 (Mua 10/05/2024 — Hết hạn bảo hành)</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">Mô tả lỗi</label>
+                  <textarea rows="3" class="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500">Bếp không đánh lửa được, đã thay pin mới</textarea>
+                </div>
+                
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 mb-1">Đính kèm ảnh/video <span class="text-red-500">*</span></label>
+                  <input type="file" id="mediaInput" accept="image/*,video/*" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 cursor-pointer border border-slate-300 rounded-lg bg-slate-50 p-1">
+                </div>
+                
+                <button type="submit" class="w-full py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  Gửi yêu cầu bảo hành
+                </button>
+              </form>
+            </div>
+
+            <!-- Ticket List -->
+            <div>
+              <h2 class="text-lg font-bold text-slate-900 mb-4">Lịch sử yêu cầu</h2>
+              <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+                <table class="w-full text-left text-sm">
+                  <thead class="bg-slate-50 text-slate-600 font-medium border-b border-slate-200">
+                    <tr>
+                      <th class="px-4 py-3">Mã ticket</th>
+                      <th class="px-4 py-3">Sản phẩm</th>
+                      <th class="px-4 py-3">Ngày gửi</th>
+                      <th class="px-4 py-3">Trạng thái</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-slate-100">
+                    <tr class="hover:bg-slate-50">
+                      <td class="px-4 py-3 font-medium">#BH-002</td>
+                      <td class="px-4 py-3 text-slate-600">Bếp Rinnai RV-365</td>
+                      <td class="px-4 py-3 text-slate-500">01/08/2026</td>
+                      <td class="px-4 py-3"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">Đang sửa</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50">
+                      <td class="px-4 py-3 font-medium">#BH-001</td>
+                      <td class="px-4 py-3 text-slate-600">Bếp Namilux NA-300</td>
+                      <td class="px-4 py-3 text-slate-500">15/03/2025</td>
+                      <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">Hoàn thành</span></td>
+                    </tr>
+                    <tr class="hover:bg-slate-50 opacity-50">
+                      <td class="px-4 py-3 font-medium">#BH-000</td>
+                      <td class="px-4 py-3 text-slate-600">Van gas Namilux</td>
+                      <td class="px-4 py-3 text-slate-500">20/01/2025</td>
+                      <td class="px-4 py-3"><span class="px-2 py-1 bg-slate-200 text-slate-700 rounded text-xs font-medium">Đã hủy</span></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2 Content -->
+        <div id="tab2" class="hidden">
+          <div class="max-w-xl mx-auto">
+            <h2 class="text-lg font-bold text-slate-900 mb-4">Bếp đang mượn tạm</h2>
+            
+            <!-- Has temporary stove -->
+            <div class="bg-white rounded-xl shadow-sm border border-blue-200 overflow-hidden relative">
+              <div class="absolute top-0 left-0 w-1 h-full bg-blue-500"></div>
+              <div class="p-6 flex items-start gap-4">
+                <div class="w-16 h-16 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <i data-lucide="flame" class="w-8 h-8 text-blue-500"></i>
+                </div>
+                <div class="flex-1">
+                  <div class="flex justify-between items-start mb-2">
+                    <div>
+                      <h3 class="font-bold text-slate-900 text-lg">Rinnai RV-150</h3>
+                      <p class="text-sm text-slate-500">Mã TS: BEP-TMP-001</p>
+                    </div>
+                    <span class="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium border border-green-200">Đang sử dụng</span>
+                  </div>
+                  
+                  <div class="mt-4 space-y-2 text-sm text-slate-600">
+                    <div class="flex justify-between">
+                      <span>Ngày mượn:</span>
+                      <span class="font-medium text-slate-900">01/08/2026</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Bếp chính đang sửa:</span>
+                      <span class="font-medium text-slate-900">Rinnai RV-365 (Ticket: #BH-002)</span>
+                    </div>
+                  </div>
+                  
+                  <div class="mt-4 p-3 bg-amber-50 text-amber-800 rounded-lg text-sm flex items-start gap-2 border border-amber-200">
+                    <i data-lucide="info" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+                    Bếp sẽ được thu hồi khi bếp chính sửa xong và bàn giao lại cho quý khách.
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- No temporary stove state (uncomment to test) -->
+            <!-- 
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-10 text-center flex flex-col items-center">
+              <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mb-4">
+                <i data-lucide="flame" class="w-8 h-8 text-slate-300"></i>
+              </div>
+              <p class="text-slate-500 font-medium">Bạn hiện không mượn bếp nào</p>
+            </div>
+            -->
+            
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initPage === 'function') {
+        initPage('Bảo hành Sản phẩm', [{label: 'Bảo hành & Mượn bếp', url: '#'}]);
+      } else {
+        lucide.createIcons();
+      }
+      
+      // Tabs
+      const tabBtn1 = document.getElementById('tabBtn1');
+      const tabBtn2 = document.getElementById('tabBtn2');
+      const tab1 = document.getElementById('tab1');
+      const tab2 = document.getElementById('tab2');
+      
+      tabBtn1.addEventListener('click', () => {
+        tab1.classList.remove('hidden');
+        tab2.classList.add('hidden');
+        tabBtn1.classList.add('border-blue-600', 'text-blue-600');
+        tabBtn1.classList.remove('border-transparent', 'text-slate-500');
+        tabBtn2.classList.add('border-transparent', 'text-slate-500');
+        tabBtn2.classList.remove('border-blue-600', 'text-blue-600');
+      });
+      
+      tabBtn2.addEventListener('click', () => {
+        tab2.classList.remove('hidden');
+        tab1.classList.add('hidden');
+        tabBtn2.classList.add('border-blue-600', 'text-blue-600');
+        tabBtn2.classList.remove('border-transparent', 'text-slate-500');
+        tabBtn1.classList.add('border-transparent', 'text-slate-500');
+        tabBtn1.classList.remove('border-blue-600', 'text-blue-600');
+      });
+      
+      // Form Validation
+      const form = document.getElementById('warrantyForm');
+      const fileInput = document.getElementById('mediaInput');
+      const productSelect = document.getElementById('productSelect');
+      const fileError = document.getElementById('fileError');
+      const warrantyError = document.getElementById('warrantyError');
+      
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        
+        fileError.classList.add('hidden');
+        warrantyError.classList.add('hidden');
+        
+        if (productSelect.value === 'out_warranty') {
+          warrantyError.classList.remove('hidden');
+          return;
+        }
+        
+        if (!fileInput.files || fileInput.files.length === 0) {
+          fileError.classList.remove('hidden');
+          return;
+        }
+        
+        // Success
+        if(typeof showToast === 'function') {
+           showToast('Đã gửi yêu cầu bảo hành. Mã ticket: #BH-003. Vui lòng chờ kỹ thuật viên liên hệ.', 'success');
+        } else {
+           alert('Đã gửi yêu cầu bảo hành. Mã ticket: #BH-003. Vui lòng chờ kỹ thuật viên liên hệ.');
+        }
+        form.reset();
+      });
+    });
+  </script>
+</body>
+</html>
+

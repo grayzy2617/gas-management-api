@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Nộp tiền & Quyết toán Ca</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6">
+        
+        <h1 class="text-2xl font-bold text-slate-800 mb-6">Nộp tiền & Quyết toán Ca</h1>
+
+        <!-- Stat Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <p class="text-sm text-slate-500 mb-1">Tổng COD thu</p>
+            <p class="text-xl font-bold text-slate-800">3,800,000đ</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <p class="text-sm text-slate-500 mb-1">Đã nộp</p>
+            <p class="text-xl font-bold text-green-600">1,500,000đ</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-blue-200 bg-blue-50">
+            <p class="text-sm text-blue-600 font-medium mb-1">Còn phải nộp</p>
+            <p class="text-xl font-bold text-blue-700">2,300,000đ</p>
+          </div>
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200">
+            <p class="text-sm text-slate-500 mb-1">Đơn hủy đền bù 50%</p>
+            <p class="text-xl font-bold text-orange-600">125,000đ</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
+          <!-- Left Column: Nộp tiền -->
+          <div class="lg:col-span-1 space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                <h3 class="font-bold text-slate-800">Nộp tiền ngay</h3>
+              </div>
+              <div class="p-5 text-center">
+                <div class="inline-block p-4 bg-white border-2 border-dashed border-slate-300 rounded-xl mb-4">
+                  <div class="w-40 h-40 bg-slate-100 flex items-center justify-center">
+                    <i data-lucide="qr-code" class="w-20 h-20 text-slate-400"></i>
+                  </div>
+                </div>
+                <p class="text-sm text-slate-600 font-medium mb-1">Quét mã để nộp tiền</p>
+                <p class="text-sm text-slate-500 mb-4">TK: 0123456789 — Vietcombank</p>
+                
+                <div class="text-left mb-4">
+                  <label class="block text-sm font-medium text-slate-700 mb-1">Số tiền nộp (VND)</label>
+                  <input type="number" value="2300000" class="w-full border border-slate-300 rounded-lg p-2 font-bold text-lg text-blue-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                </div>
+
+                <div class="space-y-2">
+                  <button onclick="showToast('Đã xác nhận chuyển tiền. Đang đợi Webhook xác nhận...', 'success')" class="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
+                    Xác nhận đã chuyển
+                  </button>
+                  <button onclick="reportBankMaintenance()" class="w-full px-4 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 font-medium rounded-lg transition-colors">
+                    Ngân hàng bảo trì?
+                  </button>
+                </div>
+                
+                <div class="mt-4 p-3 bg-slate-50 rounded-lg border border-slate-200 text-left">
+                  <p class="text-xs text-slate-500 flex items-start gap-1">
+                    <i data-lucide="info" class="w-4 h-4 text-blue-500 flex-shrink-0"></i>
+                    Webhook sẽ kiểm tra: Nếu chuyển thiếu, hệ thống tự ghi nhận số dư nợ theo số tiền thực nhận.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Đơn hủy đền bù -->
+          <div class="lg:col-span-2 space-y-6">
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <div class="bg-slate-50 border-b border-slate-200 px-5 py-3">
+                <h3 class="font-bold text-slate-800">Đơn hủy đền bù (Lịch sử)</h3>
+              </div>
+              <div class="p-5">
+                <div class="overflow-x-auto">
+                  <table class="w-full text-left border-collapse">
+                    <thead>
+                      <tr class="bg-slate-50 border-b border-slate-200">
+                        <th class="p-3 text-sm font-medium text-slate-500">Mã đơn</th>
+                        <th class="p-3 text-sm font-medium text-slate-500">Lý do hủy</th>
+                        <th class="p-3 text-sm font-medium text-slate-500">Khoảng cách</th>
+                        <th class="p-3 text-sm font-medium text-slate-500">Đền bù</th>
+                        <th class="p-3 text-sm font-medium text-slate-500">Trạng thái</th>
+                      </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                      <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-3 text-sm font-medium text-blue-600">#DH-20260803-010</td>
+                        <td class="p-3 text-sm text-slate-700">Khách đổi ý</td>
+                        <td class="p-3 text-sm text-slate-700">3.5km</td>
+                        <td class="p-3 text-sm font-medium text-slate-800">125,000đ (50%)</td>
+                        <td class="p-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Đã đền bù</span></td>
+                      </tr>
+                      <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="p-3 text-sm font-medium text-blue-600">#DH-20260803-011</td>
+                        <td class="p-3 text-sm text-slate-700">Lỗi tài xế</td>
+                        <td class="p-3 text-sm text-slate-700">2.1km</td>
+                        <td class="p-3 text-sm font-medium text-slate-800">0đ</td>
+                        <td class="p-3"><span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-red-100 text-red-800">0% — Lỗi tài xế</span></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                
+                <div class="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                  <p class="text-sm text-blue-800 flex items-start gap-2">
+                    <i data-lucide="shield-check" class="w-5 h-5 flex-shrink-0"></i>
+                    <strong>Double Payout Prevention:</strong> Nếu đơn đã tính 50% đền bù, hệ thống sẽ chặn tính lần 2 nếu có thay đổi trạng thái bất thường.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="shared.js"></script>
+  <script>
+    function reportBankMaintenance() {
+      const body = `
+        <div class="bg-orange-50 border-l-4 border-orange-500 p-3 mb-4 rounded shadow-sm text-orange-800 text-sm">
+          <strong>Lưu ý:</strong> Chỉ sử dụng khi Ngân hàng hoặc hệ thống VNPay/Momo xác nhận đang bảo trì.
+        </div>
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Ảnh minh chứng lỗi/bảo trì <span class="text-red-500">*</span></label>
+            <input type="file" id="maintainFile" class="w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-slate-700 mb-1">Ghi chú</label>
+            <textarea class="w-full border border-slate-300 rounded-lg p-2 focus:ring-2 focus:ring-blue-500 outline-none" rows="2" placeholder="VD: App ngân hàng VCB báo lỗi kết nối..."></textarea>
+          </div>
+        </div>
+      `;
+      const footer = `
+        <button onclick="closeModal()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg transition-colors">Hủy</button>
+        <button onclick="submitMaintenance()" class="px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors">Gửi yêu cầu mở khóa</button>
+      `;
+      showModal('Báo cáo Ngân hàng Bảo trì', body, footer);
+    }
+
+    function submitMaintenance() {
+      const fileInput = document.getElementById('maintainFile');
+      if (!fileInput.value) {
+        showToast('Vui lòng tải lên ảnh chụp màn hình lỗi!', 'error');
+        return;
+      }
+      closeModal();
+      showToast('Đã gửi yêu cầu. Admin sẽ duyệt mở khóa tài khoản.', 'warning');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { 
+      initPage('Nộp tiền & Quyết toán', [{label: 'Trang chủ', url: '#'}, {label: 'Quyết toán'}]);
+      lucide.createIcons(); 
+    });
+  </script>
+</body>
+</html>
+

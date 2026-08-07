@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Đăng nhập Hệ thống</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+    @keyframes fade-up { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+    .animate-float { animation: float 3s ease-in-out infinite; }
+    .animate-fade-up { animation: fade-up 0.6s ease-out forwards; }
+    .role-card { transition: all 0.3s cubic-bezier(0.4,0,0.2,1); }
+    .role-card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,0,0,0.12); }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900 flex items-center justify-center p-4">
+
+  <!-- LOGIN CONTAINER -->
+  <div class="w-full max-w-md" id="login-section">
+    <!-- Logo -->
+    <div class="text-center mb-8 animate-fade-up" style="animation-delay:0.1s">
+      <div class="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-700 shadow-xl shadow-blue-500/30 mb-4 animate-float">
+        <i data-lucide="flame" class="w-10 h-10 text-white"></i>
+      </div>
+      <h1 class="text-3xl font-extrabold text-white tracking-tight">Gas Pro</h1>
+      <p class="text-blue-300/70 mt-1">Hệ thống Quản lý Đại lý Gas</p>
+    </div>
+
+    <!-- Login Form -->
+    <div class="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 p-8 shadow-2xl animate-fade-up" style="animation-delay:0.2s">
+      <h2 class="text-xl font-bold text-white mb-6">Đăng nhập</h2>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <!-- Phone -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-blue-200 mb-2">Số điện thoại</label>
+          <div class="relative">
+            <i data-lucide="phone" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+            <input id="phone" type="tel" value="0901234567" placeholder="Nhập số điện thoại"
+              class="w-full pl-11 pr-4 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="mb-4">
+          <label class="block text-sm font-medium text-blue-200 mb-2">Mật khẩu</label>
+          <div class="relative">
+            <i data-lucide="lock" class="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400"></i>
+            <input id="password" type="password" value="123456" placeholder="Nhập mật khẩu"
+              class="w-full pl-11 pr-11 py-3 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all">
+            <button type="button" onclick="togglePassword()" class="absolute right-3 top-1/2 -translate-y-1/2">
+              <i data-lucide="eye" id="eyeIcon" class="w-5 h-5 text-slate-400 hover:text-white transition-colors"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Error message area -->
+        <div id="loginError" class="hidden mb-4 p-3 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 text-sm flex items-center gap-2">
+          <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0"></i>
+          <span id="loginErrorText"></span>
+        </div>
+
+        <!-- Login Button -->
+        <button type="submit"
+          class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 text-white font-semibold hover:from-blue-700 hover:to-blue-600 transition-all shadow-lg shadow-blue-600/30 active:scale-[0.98]">
+          Đăng nhập
+        </button>
+      </form>
+
+      <div class="mt-4 text-center">
+        <a href="customer_register.html" class="text-blue-300 text-sm hover:text-white transition-colors">Chưa có tài khoản? <span class="underline">Đăng ký ngay</span></a>
+      </div>
+    </div>
+
+    <!-- Simulation notice -->
+    <p class="text-center text-blue-300/40 text-xs mt-6 animate-fade-up" style="animation-delay:0.4s">⚡ Prototype mô phỏng — Nhấn đăng nhập để chọn vai trò</p>
+  </div>
+
+  <!-- ROLE SELECTOR (shown after login) -->
+  <div class="w-full max-w-2xl hidden" id="role-section">
+    <div class="text-center mb-8">
+      <h2 class="text-2xl font-bold text-white">Chọn vai trò truy cập</h2>
+      <p class="text-blue-300/60 mt-2">Đăng nhập bằng tài khoản: <span class="text-blue-300 font-medium" id="loggedPhone"></span></p>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <!-- Admin -->
+      <div onclick="selectRole('admin')" class="role-card cursor-pointer bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 p-6 hover:bg-white/20 hover:border-blue-400/40">
+        <div class="w-14 h-14 rounded-xl bg-blue-500/20 flex items-center justify-center mb-4">
+          <i data-lucide="shield-check" class="w-7 h-7 text-blue-400"></i>
+        </div>
+        <h3 class="text-white font-bold text-lg">Admin</h3>
+        <p class="text-slate-400 text-sm mt-1">Chủ đại lý — Quản lý toàn bộ hệ thống</p>
+        <div class="mt-4 flex flex-wrap gap-1">
+          <span class="px-2 py-0.5 text-xs rounded-full bg-blue-500/20 text-blue-300">Dashboard</span>
+          <span class="px-2 py-0.5 text-xs rounded-full bg-blue-500/20 text-blue-300">Báo cáo</span>
+          <span class="px-2 py-0.5 text-xs rounded-full bg-blue-500/20 text-blue-300">Cấu hình</span>
+        </div>
+      </div>
+
+      <!-- Operator -->
+      <div onclick="selectRole('operator')" class="role-card cursor-pointer bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 p-6 hover:bg-white/20 hover:border-indigo-400/40">
+        <div class="w-14 h-14 rounded-xl bg-indigo-500/20 flex items-center justify-center mb-4">
+          <i data-lucide="headphones" class="w-7 h-7 text-indigo-400"></i>
+        </div>
+        <h3 class="text-white font-bold text-lg">Nhân viên Tổng đài</h3>
+        <p class="text-slate-400 text-sm mt-1">Operator — Tạo đơn hộ, đối soát, bảo hành</p>
+        <div class="mt-4 flex flex-wrap gap-1">
+          <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-500/20 text-indigo-300">Đơn hàng</span>
+          <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-500/20 text-indigo-300">Đối soát</span>
+          <span class="px-2 py-0.5 text-xs rounded-full bg-indigo-500/20 text-indigo-300">Kho</span>
+        </div>
+      </div>
+
+      <!-- Driver -->
+      <div onclick="selectRole('driver')" class="role-card cursor-pointer bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 p-6 hover:bg-white/20 hover:border-emerald-400/40">
+        <div class="w-14 h-14 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-4">
+          <i data-lucide="truck" class="w-7 h-7 text-emerald-400"></i>
+        </div>
+        <h3 class="text-white font-bold text-lg">Tài xế Giao hàng</h3>
+        <p class="text-slate-400 text-sm mt-1">Driver — Nhận đơn, giao hàng, nộp tiền</p>
+        <div class="mt-4 flex flex-wrap gap-1">
+          <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300">Chợ đơn</span>
+          <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300">Giao hàng</span>
+          <span class="px-2 py-0.5 text-xs rounded-full bg-emerald-500/20 text-emerald-300">Nộp tiền</span>
+        </div>
+      </div>
+
+      <!-- Customer -->
+      <div onclick="selectRole('customer')" class="role-card cursor-pointer bg-white/10 backdrop-blur-xl rounded-2xl border border-white/10 p-6 hover:bg-white/20 hover:border-amber-400/40">
+        <div class="w-14 h-14 rounded-xl bg-amber-500/20 flex items-center justify-center mb-4">
+          <i data-lucide="user" class="w-7 h-7 text-amber-400"></i>
+        </div>
+        <h3 class="text-white font-bold text-lg">Khách hàng</h3>
+        <p class="text-slate-400 text-sm mt-1">Customer B2C — Đặt hàng, theo dõi, bảo hành</p>
+        <div class="mt-4 flex flex-wrap gap-1">
+          <span class="px-2 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300">Mua hàng</span>
+          <span class="px-2 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300">Theo dõi</span>
+          <span class="px-2 py-0.5 text-xs rounded-full bg-amber-500/20 text-amber-300">Bảo hành</span>
+        </div>
+      </div>
+    </div>
+
+    <button onclick="backToLogin()" class="mt-6 w-full py-3 rounded-xl border border-white/20 text-slate-300 hover:bg-white/10 transition-all text-sm">
+      ← Quay lại đăng nhập
+    </button>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    let loginAttempts = 0;
+    const MAX_ATTEMPTS = 5;
+
+    function togglePassword() {
+      const input = document.getElementById('password');
+      const icon = document.getElementById('eyeIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.setAttribute('data-lucide', 'eye-off');
+      } else {
+        input.type = 'password';
+        icon.setAttribute('data-lucide', 'eye');
+      }
+      lucide.createIcons();
+    }
+
+    function showLoginError(msg) {
+      const el = document.getElementById('loginError');
+      document.getElementById('loginErrorText').textContent = msg;
+      el.classList.remove('hidden');
+      lucide.createIcons();
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const phone = document.getElementById('phone').value.trim();
+      const pass = document.getElementById('password').value;
+
+      // Edge Case: mật khẩu quá ngắn
+      if (pass.length < 6) {
+        showLoginError('Mật khẩu phải từ 6 ký tự trở lên.');
+        return;
+      }
+      // Edge Case: SĐT trống
+      if (!phone) {
+        showLoginError('Vui lòng nhập số điện thoại.');
+        return;
+      }
+
+      // Simulate brute-force protection (UM-002 Error)
+      loginAttempts++;
+      if (loginAttempts > MAX_ATTEMPTS) {
+        showLoginError('Tài khoản đã bị khóa 15 phút do nhập sai quá 5 lần.');
+        return;
+      }
+
+      // Happy Path -> show role selector
+      document.getElementById('login-section').classList.add('hidden');
+      document.getElementById('role-section').classList.remove('hidden');
+      document.getElementById('loggedPhone').textContent = phone;
+    }
+
+    function selectRole(role) {
+      localStorage.setItem('gas_role', role);
+      const homeMap = {
+        admin: 'admin_dashboard.html',
+        operator: 'operator_orders.html',
+        driver: 'driver_jobboard.html',
+        customer: 'customer_catalog.html'
+      };
+      window.location.href = homeMap[role];
+    }
+
+    function backToLogin() {
+      document.getElementById('role-section').classList.add('hidden');
+      document.getElementById('login-section').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
+

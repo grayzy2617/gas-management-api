@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Quản lý Sản phẩm & Giá</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6 space-y-6">
+        
+        <div class="flex justify-between items-center">
+            <div>
+              <h2 class="text-xl font-bold text-slate-800">Danh sách Sản phẩm & Niêm yết Giá</h2>
+              <p class="text-slate-500 text-sm mt-0.5">Quản lý danh mục bình gas, bếp gas, phụ kiện và cấu hình giá bán</p>
+            </div>
+            <button class="bg-blue-600 text-white px-4 py-2.5 rounded-xl hover:bg-blue-700 flex items-center shadow-sm font-medium text-sm transition-colors" onclick="openAddModal()">
+                <i data-lucide="plus" class="w-5 h-5 mr-2"></i> Thêm sản phẩm mới
+            </button>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-4 border-b border-slate-200 bg-slate-50 flex items-center justify-between gap-4">
+              <div class="flex items-center gap-3 flex-1 max-w-md">
+                <div class="relative w-full">
+                  <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                  <input type="text" placeholder="Tìm theo mã SP, tên sản phẩm, hãng..." class="w-full pl-9 pr-4 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <select class="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                  <option value="">Tất cả loại SP</option>
+                  <option>Bình gas</option>
+                  <option>Bếp gas</option>
+                  <option>Phụ kiện</option>
+                </select>
+                <select class="px-3 py-2 text-sm border border-slate-300 rounded-lg focus:outline-none focus:border-blue-500">
+                  <option value="">Tất cả hãng</option>
+                  <option>Petrolimex</option>
+                  <option>PV Gas</option>
+                  <option>Saigon Petro</option>
+                  <option>Rinnai</option>
+                  <option>Namilux</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-slate-200">
+                            <th class="py-3.5 px-6 font-semibold">Mã SP</th>
+                            <th class="py-3.5 px-6 font-semibold">Tên Sản phẩm</th>
+                            <th class="py-3.5 px-6 font-semibold">Loại SP</th>
+                            <th class="py-3.5 px-6 font-semibold">Hãng sản xuất</th>
+                            <th class="py-3.5 px-6 font-semibold">Quy cách</th>
+                            <th class="py-3.5 px-6 font-semibold text-right">Giá bán</th>
+                            <th class="py-3.5 px-6 font-semibold text-right">Phí cọc vỏ</th>
+                            <th class="py-3.5 px-6 font-semibold text-right">Tồn kho</th>
+                            <th class="py-3.5 px-6 font-semibold">Cập nhật giá</th>
+                            <th class="py-3.5 px-6 font-semibold">Trạng thái</th>
+                            <th class="py-3.5 px-6 font-semibold text-right">Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm divide-y divide-slate-100">
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-medium text-slate-800">PG-12KG-001</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Bình gas Petrolimex 12kg</td>
+                            <td class="py-3.5 px-6 text-slate-600"><span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs">Bình gas</span></td>
+                            <td class="py-3.5 px-6 text-slate-600">Petrolimex</td>
+                            <td class="py-3.5 px-6 text-slate-500">12 kg</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">420,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-slate-600">500,000đ</td>
+                            <td class="py-3.5 px-6 text-right font-semibold text-slate-700">120</td>
+                            <td class="py-3.5 px-6 text-slate-500 text-xs">01/08/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Kinh doanh</span></td>
+                            <td class="py-3.5 px-6 text-right">
+                              <button class="text-blue-600 hover:text-blue-800 p-1 font-medium text-xs flex items-center justify-end gap-1 ml-auto" onclick="openEditModal('PG-12KG-001', 'Bình gas Petrolimex 12kg', 'Bình gas', 'Petrolimex', '12 kg', 420000, 500000, 120, 'Kinh doanh', 'Bình gas chính hãng Petrolimex van ngang chống cháy nổ')">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i> Sửa
+                              </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-medium text-slate-800">PG-50KG-002</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Bình gas PV Gas 50kg (Công nghiệp)</td>
+                            <td class="py-3.5 px-6 text-slate-600"><span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs">Bình gas</span></td>
+                            <td class="py-3.5 px-6 text-slate-600">PV Gas</td>
+                            <td class="py-3.5 px-6 text-slate-500">50 kg</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">1,150,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-slate-600">1,200,000đ</td>
+                            <td class="py-3.5 px-6 text-right font-semibold text-slate-700">45</td>
+                            <td class="py-3.5 px-6 text-slate-500 text-xs">25/07/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Kinh doanh</span></td>
+                            <td class="py-3.5 px-6 text-right">
+                              <button class="text-blue-600 hover:text-blue-800 p-1 font-medium text-xs flex items-center justify-end gap-1 ml-auto" onclick="openEditModal('PG-50KG-002', 'Bình gas PV Gas 50kg (Công nghiệp)', 'Bình gas', 'PV Gas', '50 kg', 1150000, 1200000, 45, 'Kinh doanh', 'Dùng cho nhà hàng khách sạn bếp công nghiệp')">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i> Sửa
+                              </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-medium text-slate-800">BEP-RIN-365</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Bếp gas Rinnai RV-365(G) Đôi</td>
+                            <td class="py-3.5 px-6 text-slate-600"><span class="px-2 py-0.5 bg-orange-50 text-orange-700 rounded text-xs">Bếp gas</span></td>
+                            <td class="py-3.5 px-6 text-slate-600">Rinnai</td>
+                            <td class="py-3.5 px-6 text-slate-500">Bếp đôi mặt men</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">2,800,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-slate-400">0đ</td>
+                            <td class="py-3.5 px-6 text-right font-semibold text-slate-700">18</td>
+                            <td class="py-3.5 px-6 text-slate-500 text-xs">10/06/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Kinh doanh</span></td>
+                            <td class="py-3.5 px-6 text-right">
+                              <button class="text-blue-600 hover:text-blue-800 p-1 font-medium text-xs flex items-center justify-end gap-1 ml-auto" onclick="openEditModal('BEP-RIN-365', 'Bếp gas Rinnai RV-365(G) Đôi', 'Bếp gas', 'Rinnai', 'Bếp đôi mặt men', 2800000, 0, 18, 'Kinh doanh', 'Đánh lửa Magneto đầu đốt đồng thau')">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i> Sửa
+                              </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-medium text-slate-800">VAN-NA-01</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Van gas Namilux NA-345S Ngắt tự động</td>
+                            <td class="py-3.5 px-6 text-slate-600"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-xs">Phụ kiện</span></td>
+                            <td class="py-3.5 px-6 text-slate-600">Namilux</td>
+                            <td class="py-3.5 px-6 text-slate-500">Áp thấp ngắt tự động</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">150,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-slate-400">0đ</td>
+                            <td class="py-3.5 px-6 text-right font-semibold text-slate-700">85</td>
+                            <td class="py-3.5 px-6 text-slate-500 text-xs">01/01/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Kinh doanh</span></td>
+                            <td class="py-3.5 px-6 text-right">
+                              <button class="text-blue-600 hover:text-blue-800 p-1 font-medium text-xs flex items-center justify-end gap-1 ml-auto" onclick="openEditModal('VAN-NA-01', 'Van gas Namilux NA-345S Ngắt tự động', 'Phụ kiện', 'Namilux', 'Áp thấp ngắt tự động', 150000, 0, 85, 'Kinh doanh', 'Van an toàn ngắt gas khi phát hiện rò rỉ')">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i> Sửa
+                              </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-medium text-slate-800">DAY-PE-15</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Dây gas Petrolimex Chống chuột 1.5m</td>
+                            <td class="py-3.5 px-6 text-slate-600"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-xs">Phụ kiện</span></td>
+                            <td class="py-3.5 px-6 text-slate-600">Petrolimex</td>
+                            <td class="py-3.5 px-6 text-slate-500">1.5m 3 lớp PVC</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">85,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-slate-400">0đ</td>
+                            <td class="py-3.5 px-6 text-right font-semibold text-slate-700">110</td>
+                            <td class="py-3.5 px-6 text-slate-500 text-xs">01/01/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Kinh doanh</span></td>
+                            <td class="py-3.5 px-6 text-right">
+                              <button class="text-blue-600 hover:text-blue-800 p-1 font-medium text-xs flex items-center justify-end gap-1 ml-auto" onclick="openEditModal('DAY-PE-15', 'Dây gas Petrolimex Chống chuột 1.5m', 'Phụ kiện', 'Petrolimex', '1.5m 3 lớp PVC', 85000, 0, 110, 'Kinh doanh', 'Dây dẫn gas 3 lớp lõi inox chống chuột cắn')">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i> Sửa
+                              </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-medium text-slate-800">PG-12KG-003</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Bình gas Saigon Petro 12kg</td>
+                            <td class="py-3.5 px-6 text-slate-600"><span class="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs">Bình gas</span></td>
+                            <td class="py-3.5 px-6 text-slate-600">Saigon Petro</td>
+                            <td class="py-3.5 px-6 text-slate-500">12 kg</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">410,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-slate-600">500,000đ</td>
+                            <td class="py-3.5 px-6 text-right font-semibold text-slate-700">80</td>
+                            <td class="py-3.5 px-6 text-slate-500 text-xs">01/08/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Kinh doanh</span></td>
+                            <td class="py-3.5 px-6 text-right">
+                              <button class="text-blue-600 hover:text-blue-800 p-1 font-medium text-xs flex items-center justify-end gap-1 ml-auto" onclick="openEditModal('PG-12KG-003', 'Bình gas Saigon Petro 12kg', 'Bình gas', 'Saigon Petro', '12 kg', 410000, 500000, 80, 'Kinh doanh', 'Bình gas Saigon Petro vỏ xám van xoáy an toàn')">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i> Sửa
+                              </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-medium text-slate-800">BEP-SUN-11</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Bếp gas Sunhouse SHB3365 Kính cường lực</td>
+                            <td class="py-3.5 px-6 text-slate-600"><span class="px-2 py-0.5 bg-orange-50 text-orange-700 rounded text-xs">Bếp gas</span></td>
+                            <td class="py-3.5 px-6 text-slate-600">Sunhouse</td>
+                            <td class="py-3.5 px-6 text-slate-500">Bếp đôi kính cường lực</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">950,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-slate-400">0đ</td>
+                            <td class="py-3.5 px-6 text-right font-semibold text-slate-700">25</td>
+                            <td class="py-3.5 px-6 text-slate-500 text-xs">15/05/2026</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">Kinh doanh</span></td>
+                            <td class="py-3.5 px-6 text-right">
+                              <button class="text-blue-600 hover:text-blue-800 p-1 font-medium text-xs flex items-center justify-end gap-1 ml-auto" onclick="openEditModal('BEP-SUN-11', 'Bếp gas Sunhouse SHB3365 Kính cường lực', 'Bếp gas', 'Sunhouse', 'Bếp đôi kính cường lực', 950000, 0, 25, 'Kinh doanh', 'Bếp đôi kính chịu nhiệt dễ lau chùi tiết kiệm gas')">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i> Sửa
+                              </button>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50">
+                            <td class="py-3.5 px-6 font-medium text-slate-800">VO-PG-12</td>
+                            <td class="py-3.5 px-6 font-medium text-slate-900">Vỏ bình gas 12kg Cũ</td>
+                            <td class="py-3.5 px-6 text-slate-600"><span class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded text-xs">Phụ kiện</span></td>
+                            <td class="py-3.5 px-6 text-slate-600">Nhiều hãng</td>
+                            <td class="py-3.5 px-6 text-slate-500">Vỏ rỗng 12kg</td>
+                            <td class="py-3.5 px-6 text-right font-bold text-slate-800">300,000đ</td>
+                            <td class="py-3.5 px-6 text-right text-slate-400">0đ</td>
+                            <td class="py-3.5 px-6 text-right font-semibold text-slate-700">0</td>
+                            <td class="py-3.5 px-6 text-slate-500 text-xs">01/01/2025</td>
+                            <td class="py-3.5 px-6"><span class="px-2.5 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">Tạm ngưng</span></td>
+                            <td class="py-3.5 px-6 text-right">
+                              <button class="text-blue-600 hover:text-blue-800 p-1 font-medium text-xs flex items-center justify-end gap-1 ml-auto" onclick="openEditModal('VO-PG-12', 'Vỏ bình gas 12kg Cũ', 'Phụ kiện', 'Nhiều hãng', 'Vỏ rỗng 12kg', 300000, 0, 0, 'Tạm ngưng', 'Vỏ rỗng quá niên hạn kiểm định ngừng bán')">
+                                <i data-lucide="edit" class="w-3.5 h-3.5"></i> Sửa
+                              </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    initPage('Quản lý Sản phẩm & Giá', [{label: 'Quản lý Sản phẩm & Giá'}]);
+    
+    function openEditModal(code, name, category, brand, specs, price, deposit, stock, status, desc) {
+        const body = `
+            <div class="space-y-4 text-left">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Mã sản phẩm</label>
+                      <input type="text" value="${code}" class="w-full border border-slate-300 rounded-lg p-2 bg-slate-100 text-slate-600 font-mono text-sm" readonly>
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Loại sản phẩm</label>
+                      <select id="editCategory" onchange="toggleDepositField('editCategory', 'editDepositGroup')" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                        <option ${category==='Bình gas'?'selected':''}>Bình gas</option>
+                        <option ${category==='Bếp gas'?'selected':''}>Bếp gas</option>
+                        <option ${category==='Phụ kiện'?'selected':''}>Phụ kiện</option>
+                      </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Hãng sản xuất</label>
+                      <select id="editBrand" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                        <option ${brand==='Petrolimex'?'selected':''}>Petrolimex</option>
+                        <option ${brand==='PV Gas'?'selected':''}>PV Gas</option>
+                        <option ${brand==='Saigon Petro'?'selected':''}>Saigon Petro</option>
+                        <option ${brand==='Totalgaz'?'selected':''}>Totalgaz</option>
+                        <option ${brand==='Rinnai'?'selected':''}>Rinnai</option>
+                        <option ${brand==='Namilux'?'selected':''}>Namilux</option>
+                        <option ${brand==='Sunhouse'?'selected':''}>Sunhouse</option>
+                        <option ${brand==='Nhiều hãng'?'selected':''}>Nhiều hãng</option>
+                      </select>
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Quy cách / Trọng lượng</label>
+                      <input type="text" id="editSpecs" value="${specs}" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                  </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Tên sản phẩm</label>
+                    <input type="text" id="editName" value="${name}" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Giá bán niêm yết (VNĐ)</label>
+                      <input type="number" id="newPrice" value="${price}" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-bold">
+                      <p id="priceError" class="text-red-600 text-xs mt-1 hidden">Giá bán phải lớn hơn 0</p>
+                  </div>
+                  <div id="editDepositGroup" class="${category==='Bình gas'?'':'hidden'}">
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Phí cọc vỏ mặc định (VNĐ)</label>
+                      <input type="number" id="editDeposit" value="${deposit}" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Tồn kho hiện tại</label>
+                      <input type="number" id="editStock" value="${stock}" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Trạng thái kinh doanh</label>
+                      <select id="editStatus" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                        <option ${status==='Kinh doanh'?'selected':''}>Kinh doanh</option>
+                        <option ${status==='Tạm ngưng'?'selected':''}>Tạm ngưng</option>
+                      </select>
+                  </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Mô tả sản phẩm</label>
+                    <textarea id="editDesc" rows="2" class="w-full border border-slate-300 rounded-lg p-2 text-sm">${desc || ''}</textarea>
+                </div>
+
+                <div class="p-3 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-800 flex items-start gap-2">
+                    <i data-lucide="info" class="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5"></i>
+                    <span><strong>Lưu ý bảo toàn giá:</strong> Đơn hàng đã đặt trước đó luôn giữ nguyên giá lịch sử tại thời điểm tạo đơn. Giá mới áp dụng cho đơn phát sinh mới.</span>
+                </div>
+            </div>
+        `;
+        const footer = `
+            <button class="px-4 py-2 bg-slate-200 text-slate-800 text-sm font-medium rounded-lg mr-2 hover:bg-slate-300" onclick="closeModal()">Hủy</button>
+            <button class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700" onclick="savePrice()">Lưu thay đổi</button>
+        `;
+        showModal('Chỉnh sửa Thông tin & Giá Sản phẩm', body, footer);
+    }
+
+    function toggleDepositField(selectId, targetId) {
+        const val = document.getElementById(selectId).value;
+        const target = document.getElementById(targetId);
+        if (val === 'Bình gas') {
+            target.classList.remove('hidden');
+        } else {
+            target.classList.add('hidden');
+        }
+    }
+
+    function savePrice() {
+        const p = parseFloat(document.getElementById('newPrice').value);
+        if(isNaN(p) || p <= 0) {
+            document.getElementById('priceError').classList.remove('hidden');
+        } else {
+            document.getElementById('priceError').classList.add('hidden');
+            closeModal();
+            showToast('Cập nhật thông tin & giá sản phẩm thành công!', 'success');
+        }
+    }
+
+    function openAddModal() {
+        const body = `
+            <div class="space-y-4 text-left">
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Mã sản phẩm <span class="text-red-500">*</span></label>
+                      <input type="text" id="addCode" placeholder="VD: PG-12KG-004" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-mono uppercase">
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Loại sản phẩm <span class="text-red-500">*</span></label>
+                      <select id="addCategory" onchange="toggleDepositField('addCategory', 'addDepositGroup')" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                        <option value="Bình gas">Bình gas</option>
+                        <option value="Bếp gas">Bếp gas</option>
+                        <option value="Phụ kiện">Phụ kiện</option>
+                      </select>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Hãng sản xuất <span class="text-red-500">*</span></label>
+                      <select id="addBrand" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                        <option>Petrolimex</option>
+                        <option>PV Gas</option>
+                        <option>Saigon Petro</option>
+                        <option>Totalgaz</option>
+                        <option>Rinnai</option>
+                        <option>Namilux</option>
+                        <option>Sunhouse</option>
+                        <option>Khác</option>
+                      </select>
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Quy cách / Trọng lượng</label>
+                      <input type="text" id="addSpecs" placeholder="VD: 12 kg hoặc Bếp đôi" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                  </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Tên sản phẩm <span class="text-red-500">*</span></label>
+                    <input type="text" id="addName" placeholder="VD: Bình gas Petrolimex 12kg Van ngang" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Giá bán niêm yết (VNĐ) <span class="text-red-500">*</span></label>
+                      <input type="number" id="addPrice" placeholder="VD: 420000" class="w-full border border-slate-300 rounded-lg p-2 text-sm font-bold">
+                  </div>
+                  <div id="addDepositGroup">
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Phí cọc vỏ mặc định (VNĐ)</label>
+                      <input type="number" id="addDeposit" value="500000" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Số lượng tồn kho ban đầu</label>
+                      <input type="number" id="addStock" value="50" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                  </div>
+                  <div>
+                      <label class="block text-sm font-medium text-slate-700 mb-1">Trạng thái kinh doanh</label>
+                      <select id="addStatus" class="w-full border border-slate-300 rounded-lg p-2 text-sm">
+                        <option value="Kinh doanh">Kinh doanh</option>
+                        <option value="Tạm ngưng">Tạm ngưng</option>
+                      </select>
+                  </div>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Mô tả sản phẩm</label>
+                    <textarea id="addDesc" rows="2" placeholder="Nhập đặc tính kỹ thuật, bảo hành..." class="w-full border border-slate-300 rounded-lg p-2 text-sm"></textarea>
+                </div>
+            </div>
+        `;
+        const footer = `
+            <button class="px-4 py-2 bg-slate-200 text-slate-800 text-sm font-medium rounded-lg mr-2 hover:bg-slate-300" onclick="closeModal()">Hủy</button>
+            <button class="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700" onclick="confirmAddProduct()">Tạo sản phẩm</button>
+        `;
+        showModal('Thêm Sản phẩm mới vào Hệ thống', body, footer);
+    }
+
+    function confirmAddProduct() {
+        const code = document.getElementById('addCode').value.trim();
+        const name = document.getElementById('addName').value.trim();
+        const price = parseFloat(document.getElementById('addPrice').value);
+
+        if (!code || !name || isNaN(price) || price <= 0) {
+            showToast('Vui lòng điền đầy đủ thông tin bắt buộc (Mã SP, Tên SP, Giá bán > 0)!', 'error');
+            return;
+        }
+
+        closeModal();
+        showToast(`Đã thêm sản phẩm "${name}" thành công!`, 'success');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => { lucide.createIcons(); });
+  </script>
+</body>
+</html>

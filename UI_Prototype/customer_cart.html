@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gas Pro — Giỏ hàng & Thanh toán</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-slate-50 min-h-screen">
+  <div class="flex h-screen">
+    <!-- Sidebar -->
+    <aside id="sidebar" class="w-64 bg-slate-900 flex-shrink-0 overflow-y-auto"></aside>
+    <!-- Main -->
+    <div class="flex-1 flex flex-col overflow-hidden">
+      <header id="header" class="bg-white border-b border-slate-200 px-6 py-4 flex-shrink-0"></header>
+      <main class="flex-1 overflow-y-auto p-6">
+        
+        <div class="flex flex-col lg:flex-row gap-6">
+          
+          <!-- Giỏ hàng (Left) -->
+          <div class="flex-1">
+            <h2 class="text-xl font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <i data-lucide="shopping-cart" class="w-6 h-6 text-blue-600"></i>
+              Giỏ hàng của bạn
+            </h2>
+            
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+              <ul class="divide-y divide-slate-200" id="cartList">
+                
+                <!-- Item 1 -->
+                <li class="p-4 sm:p-6 cart-item" data-price="420000" data-deposit="300000" data-req-deposit="true">
+                  <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="w-20 h-20 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="package" class="w-10 h-10 text-slate-400"></i>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-between">
+                      <div class="flex justify-between items-start">
+                        <div>
+                          <h3 class="font-bold text-slate-900 text-lg">Bình gas PG 12kg</h3>
+                          <p class="text-slate-500">420.000 đ/bình</p>
+                        </div>
+                        <button class="text-red-500 hover:text-red-700 p-1" title="Xóa">
+                          <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        </button>
+                      </div>
+                      
+                      <div class="flex flex-wrap items-center justify-between gap-4 mt-4">
+                        <div class="flex items-center gap-4">
+                          <div class="flex items-center border border-slate-200 rounded-lg bg-white">
+                            <button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-l-lg qty-btn minus">-</button>
+                            <input type="number" class="w-12 h-8 text-center text-sm font-medium border-x border-slate-200 focus:outline-none qty-input" value="2" min="1">
+                            <button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-r-lg qty-btn plus">+</button>
+                          </div>
+                          
+                          <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 return-shell-cb" checked>
+                            Có vỏ đổi
+                          </label>
+                        </div>
+                        
+                        <div class="text-right">
+                          <div class="text-sm text-slate-500 deposit-text hidden">+ Cọc vỏ: 600.000 đ</div>
+                          <div class="font-bold text-blue-800 text-lg item-total">840.000 đ</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <!-- Item 2 -->
+                <li class="p-4 sm:p-6 cart-item" data-price="1150000" data-deposit="500000" data-req-deposit="true">
+                  <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="w-20 h-20 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="package" class="w-10 h-10 text-slate-400"></i>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-between">
+                      <div class="flex justify-between items-start">
+                        <div>
+                          <h3 class="font-bold text-slate-900 text-lg">Bình gas PG 50kg</h3>
+                          <p class="text-slate-500">1.150.000 đ/bình</p>
+                        </div>
+                        <button class="text-red-500 hover:text-red-700 p-1" title="Xóa">
+                          <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        </button>
+                      </div>
+                      
+                      <div class="flex flex-wrap items-center justify-between gap-4 mt-4">
+                        <div class="flex items-center gap-4">
+                          <div class="flex items-center border border-slate-200 rounded-lg bg-white">
+                            <button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-l-lg qty-btn minus">-</button>
+                            <input type="number" class="w-12 h-8 text-center text-sm font-medium border-x border-slate-200 focus:outline-none qty-input" value="1" min="1">
+                            <button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-r-lg qty-btn plus">+</button>
+                          </div>
+                          
+                          <label class="flex items-center gap-2 cursor-pointer text-sm font-medium text-slate-700 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-200">
+                            <input type="checkbox" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500 return-shell-cb">
+                            Có vỏ đổi
+                          </label>
+                        </div>
+                        
+                        <div class="text-right">
+                          <div class="text-sm text-slate-500 deposit-text">+ Cọc vỏ: 500.000 đ</div>
+                          <div class="font-bold text-blue-800 text-lg item-total">1.650.000 đ</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+                <!-- Item 3 -->
+                <li class="p-4 sm:p-6 cart-item" data-price="2800000" data-deposit="0" data-req-deposit="false">
+                  <div class="flex flex-col sm:flex-row gap-4">
+                    <div class="w-20 h-20 bg-slate-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                      <i data-lucide="flame" class="w-10 h-10 text-slate-400"></i>
+                    </div>
+                    <div class="flex-1 flex flex-col justify-between">
+                      <div class="flex justify-between items-start">
+                        <div>
+                          <h3 class="font-bold text-slate-900 text-lg">Bếp gas Rinnai RV-365</h3>
+                          <p class="text-slate-500">2.800.000 đ/cái</p>
+                        </div>
+                        <button class="text-red-500 hover:text-red-700 p-1" title="Xóa">
+                          <i data-lucide="trash-2" class="w-5 h-5"></i>
+                        </button>
+                      </div>
+                      
+                      <div class="flex flex-wrap items-center justify-between gap-4 mt-4">
+                        <div class="flex items-center gap-4">
+                          <div class="flex items-center border border-slate-200 rounded-lg bg-white">
+                            <button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-l-lg qty-btn minus">-</button>
+                            <input type="number" class="w-12 h-8 text-center text-sm font-medium border-x border-slate-200 focus:outline-none qty-input" value="1" min="1">
+                            <button class="w-8 h-8 flex items-center justify-center text-slate-500 hover:bg-slate-50 rounded-r-lg qty-btn plus">+</button>
+                          </div>
+                        </div>
+                        
+                        <div class="text-right">
+                          <div class="font-bold text-blue-800 text-lg item-total">2.800.000 đ</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+
+              </ul>
+            </div>
+          </div>
+
+          <!-- Thanh toán (Right) -->
+          <div class="w-full lg:w-96 flex-shrink-0">
+            <h2 class="text-xl font-bold text-slate-900 mb-4">Thông tin Thanh toán</h2>
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 flex flex-col gap-6 sticky top-6">
+              
+              <!-- Address -->
+              <div>
+                <h3 class="text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">Địa chỉ giao hàng</h3>
+                <input type="text" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" value="123 Nguyễn Trãi, Q.1, TP.HCM">
+              </div>
+
+              <!-- Payment Method -->
+              <div>
+                <h3 class="text-sm font-bold text-slate-700 mb-2 uppercase tracking-wider">Phương thức thanh toán</h3>
+                <div class="space-y-3">
+                  <label class="flex items-start gap-3 p-3 border border-blue-500 bg-blue-50 rounded-lg cursor-pointer">
+                    <input type="radio" name="payment" value="cod" class="mt-0.5 w-4 h-4 text-blue-600" checked>
+                    <div>
+                      <div class="font-medium text-slate-900">Tiền mặt (COD)</div>
+                      <div class="text-xs text-slate-500">Thanh toán khi nhận hàng</div>
+                    </div>
+                  </label>
+                  <label class="flex items-start gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+                    <input type="radio" name="payment" value="qr" class="mt-0.5 w-4 h-4 text-blue-600">
+                    <div>
+                      <div class="font-medium text-slate-900">Chuyển khoản QR</div>
+                      <div class="text-xs text-slate-500">Quét mã QR khi nhận hàng</div>
+                    </div>
+                  </label>
+                  <label class="flex items-start gap-3 p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-slate-50">
+                    <input type="radio" name="payment" value="debt" class="mt-0.5 w-4 h-4 text-blue-600">
+                    <div>
+                      <div class="font-medium text-slate-900">Ghi nợ (Mua trước trả sau)</div>
+                      <div class="text-xs text-slate-500 mt-0.5">Dành cho Khách sỉ B2B (>1 năm, >20 bình - Hạn mức 10M) & Khách lẻ B2C (>1 năm, >10 bình - Hạn mức 1M)</div>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Summary -->
+              <div>
+                <h3 class="text-sm font-bold text-slate-700 mb-3 uppercase tracking-wider">Tóm tắt đơn hàng</h3>
+                <div class="space-y-2 text-sm">
+                  <div class="flex justify-between text-slate-600">
+                    <span>Tổng tiền hàng</span>
+                    <span id="sumGoods" class="font-medium">4.790.000 đ</span>
+                  </div>
+                  <div class="flex justify-between text-slate-600">
+                    <span>Phí cọc vỏ</span>
+                    <span id="sumDeposit" class="font-medium">500.000 đ</span>
+                  </div>
+                  <div class="border-t border-slate-200 pt-2 mt-2 flex justify-between items-center">
+                    <span class="font-bold text-slate-900">Tổng cộng</span>
+                    <span id="sumTotal" class="text-2xl font-bold text-blue-800">5.290.000 đ</span>
+                  </div>
+                </div>
+              </div>
+
+              <button id="checkoutBtn" class="w-full py-3 bg-blue-600 text-white font-bold rounded-xl hover:bg-blue-700 transition-colors shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                Đặt hàng
+              </button>
+
+            </div>
+          </div>
+
+        </div>
+
+      </main>
+    </div>
+  </div>
+  <script src="shared.js"></script>
+  <script>
+    function updateTotals() {
+      let sumGoods = 0;
+      let sumDeposit = 0;
+      
+      document.querySelectorAll('.cart-item').forEach(item => {
+        const price = parseFloat(item.dataset.price);
+        const depositPrice = parseFloat(item.dataset.deposit);
+        const reqDeposit = item.dataset.reqDeposit === 'true';
+        
+        const qty = parseInt(item.querySelector('.qty-input').value);
+        let itemGoods = price * qty;
+        let itemDeposit = 0;
+        
+        const depositText = item.querySelector('.deposit-text');
+        
+        if (reqDeposit) {
+          const cb = item.querySelector('.return-shell-cb');
+          if (cb && !cb.checked) {
+            itemDeposit = depositPrice * qty;
+            if(depositText) {
+              depositText.textContent = `+ Cọc vỏ: ${itemDeposit.toLocaleString('vi-VN')} đ`;
+              depositText.classList.remove('hidden');
+            }
+          } else {
+            if(depositText) depositText.classList.add('hidden');
+          }
+        }
+        
+        const itemTotal = itemGoods + itemDeposit;
+        item.querySelector('.item-total').textContent = itemTotal.toLocaleString('vi-VN') + ' đ';
+        
+        sumGoods += itemGoods;
+        sumDeposit += itemDeposit;
+      });
+      
+      const sumTotal = sumGoods + sumDeposit;
+      
+      document.getElementById('sumGoods').textContent = sumGoods.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('sumDeposit').textContent = sumDeposit.toLocaleString('vi-VN') + ' đ';
+      document.getElementById('sumTotal').textContent = sumTotal.toLocaleString('vi-VN') + ' đ';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initPage === 'function') {
+        initPage('Giỏ hàng & Thanh toán', [{label: 'Giỏ hàng', url: '#'}]);
+      } else {
+        lucide.createIcons();
+      }
+      
+      // Events for quantity and checkbox
+      document.querySelectorAll('.cart-item').forEach(item => {
+        const input = item.querySelector('.qty-input');
+        const minusBtn = item.querySelector('.qty-btn.minus');
+        const plusBtn = item.querySelector('.qty-btn.plus');
+        const cb = item.querySelector('.return-shell-cb');
+        
+        minusBtn.addEventListener('click', () => {
+          let val = parseInt(input.value);
+          if (val > 1) {
+            input.value = val - 1;
+            updateTotals();
+          } else {
+            if(typeof showToast === 'function') showToast('Số lượng tối thiểu là 1', 'warning');
+            else alert('Số lượng tối thiểu là 1');
+          }
+        });
+        
+        plusBtn.addEventListener('click', () => {
+          input.value = parseInt(input.value) + 1;
+          updateTotals();
+        });
+        
+        input.addEventListener('change', () => {
+          let val = parseInt(input.value);
+          if(isNaN(val) || val <= 0) {
+            input.value = 1;
+            if(typeof showToast === 'function') showToast('Số lượng tối thiểu là 1', 'warning');
+          }
+          updateTotals();
+        });
+        
+        if(cb) {
+          cb.addEventListener('change', () => {
+            updateTotals();
+          });
+        }
+      });
+      
+      // Handle checkout
+      document.getElementById('checkoutBtn').addEventListener('click', () => {
+        const items = document.querySelectorAll('.cart-item').length;
+        if (items === 0) {
+           if(typeof showToast === 'function') showToast('Giỏ hàng trống', 'error');
+           return;
+        }
+        
+        if(typeof showToast === 'function') {
+           showToast('Đặt hàng thành công! Mã đơn: #DH-20260803-099. Trạng thái: Chờ nhận đơn', 'success');
+        } else {
+           alert('Đặt hàng thành công!');
+        }
+        
+        setTimeout(() => {
+          window.location.href = 'customer_orders.html';
+        }, 1500);
+      });
+      
+      // Select payment visual
+      document.querySelectorAll('input[name="payment"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+          document.querySelectorAll('input[name="payment"]').forEach(r => {
+            const label = r.closest('label');
+            if (r.checked) {
+              label.classList.add('border-blue-500', 'bg-blue-50');
+              label.classList.remove('border-slate-200');
+            } else {
+              label.classList.remove('border-blue-500', 'bg-blue-50');
+              label.classList.add('border-slate-200');
+            }
+          });
+        });
+      });
+      
+      // Initial calc
+      updateTotals();
+    });
+  </script>
+</body>
+</html>
+
