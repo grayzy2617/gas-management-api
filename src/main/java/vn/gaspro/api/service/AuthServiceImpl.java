@@ -2,6 +2,7 @@ package vn.gaspro.api.service;
 
 import com.nimbusds.jose.*;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.AccessLevel;
@@ -13,14 +14,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import vn.gaspro.api.dto.request.LoginRequest;
+import vn.gaspro.api.dto.request.RefreshTokenRequest;
 import vn.gaspro.api.dto.request.RegisterRequest;
 import vn.gaspro.api.dto.response.AuthResponse;
+import vn.gaspro.api.dto.response.UserResponse;
 import vn.gaspro.api.entity.InvalidatedToken;
 import vn.gaspro.api.entity.Role;
 import vn.gaspro.api.entity.User;
 import vn.gaspro.api.enums.ErrorCode;
 import vn.gaspro.api.enums.RoleCode;
 import vn.gaspro.api.exception.AppException;
+import vn.gaspro.api.mapper.UserMapper;
 import vn.gaspro.api.repository.InvalidatedTokenRepository;
 import vn.gaspro.api.repository.RoleRepository;
 import vn.gaspro.api.repository.UserRepository;
@@ -41,6 +45,7 @@ public class AuthServiceImpl implements AuthService {
     RoleRepository roleRepository;
     InvalidatedTokenRepository invalidatedTokenRepository;
     PasswordEncoder passwordEncoder;
+    UserMapper userMapper;
 
     @NonFinal
     @Value("${jwt.signer-key}")
@@ -60,10 +65,8 @@ public class AuthServiceImpl implements AuthService {
             throw new AppException(ErrorCode.PHONE_EXISTED);
         }
 
-        // Khách hàng hoặc tài xế chọn Role khi đăng ký, mặc định CUSTOMER nếu không truyền
         RoleCode requestedRoleCode = request.getRoleCode() != null ? request.getRoleCode() : RoleCode.CUSTOMER;
         
-        // Không cho phép tự đăng ký làm ADMIN hoặc OPERATOR
         if (requestedRoleCode == RoleCode.ADMIN || requestedRoleCode == RoleCode.OPERATOR) {
             throw new AppException(ErrorCode.UNAUTHORIZED);
         }
@@ -84,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public AuthResponse login(LoginRequest request) {
         User user = userRepository.findByPhone(request.getPhone())
-                .orElseThrow(() -> new AppException(ErrorCode.WRONG_PASSWORD)); // Tránh lộ thông tin user không tồn tại
+                .orElseThrow(() -> new AppException(ErrorCode.WRONG_PASSWORD));
 
         boolean authenticated = passwordEncoder.matches(request.getPassword(), user.getPassword());
         if (!authenticated) {
@@ -123,6 +126,67 @@ public class AuthServiceImpl implements AuthService {
             log.error("Error while parsing token for logout", e);
             throw new AppException(ErrorCode.INVALID_TOKEN);
         }
+    }
+
+    @Override
+    public AuthResponse refreshToken(RefreshTokenRequest request) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(request.getRefreshToken());
+            
+            // Verify signature
+            JWSVerifier verifier = new MACVerifier(SIGNER_KEY.getBytes());
+            if (!signedJWT.verify(verifier)) {
+                throw new AppException(ErrorCode.INVALID_TOKEN);
+            }
+
+            // Verify expiration
+            Date expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
+            if (expiryTime.before(new Date())) {
+                throw new AppException(ErrorCode.TOKEN_EXPIRED);
+            }
+
+            String jti = signedJWT.getJWTClaimsSet().getJWTID();
+            
+            // Check blacklist
+            if (invalidatedTokenRepository.existsById(jti)) {
+                throw new AppException(ErrorCode.TOKEN_BLACKLISTED);
+            }
+
+            // Lấy user ra
+            String phone = signedJWT.getJWTClaimsSet().getSubject();
+            User user = userRepository.findByPhone(phone)
+                    .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+            // Vô hiệu hóa (Blacklist) Refresh Token cũ này
+            InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                    .id(jti)
+                    .expiryTime(expiryTime)
+                    .build();
+            invalidatedTokenRepository.save(invalidatedToken);
+
+            // Sinh cặp token mới
+            String accessToken = generateToken(user, VALID_DURATION);
+            String newRefreshToken = generateToken(user, REFRESHABLE_DURATION);
+
+            return AuthResponse.builder()
+                    .userId(user.getId())
+                    .phone(user.getPhone())
+                    .roleCode(user.getRole().getCode())
+                    .accessToken(accessToken)
+                    .refreshToken(newRefreshToken)
+                    .build();
+
+        } catch (ParseException | JOSEException e) {
+            log.error("Error while verifying refresh token", e);
+            throw new AppException(ErrorCode.INVALID_TOKEN);
+        }
+    }
+
+    @Override
+    public UserResponse getMyProfile(String phone) {
+        User user = userRepository.findByPhone(phone)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        return userMapper.toUserResponse(user);
     }
 
     private String generateToken(User user, long expirationMillis) {
