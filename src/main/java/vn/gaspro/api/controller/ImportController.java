@@ -21,4 +21,10 @@ public class ImportController {
             @Valid @RequestBody ImportReceiptRequest request) {
         return ResponseEntity.ok(ApiResponse.success(importService.createImportReceipt(request)));
     }
+
+    @PostMapping("/exchange")
+    public ResponseEntity<ApiResponse<ImportReceiptResponse>> createShellExchangeReceipt(
+            @Valid @RequestBody vn.gaspro.api.dto.request.ShellExchangeRequest request) {
+        return ResponseEntity.ok(ApiResponse.success(importService.createShellExchangeReceipt(request)));
+    }
 }

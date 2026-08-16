@@ -37,10 +37,10 @@ public class SupplierServiceImpl implements SupplierService {
     @Transactional
     public SupplierDebtHistoryResponse payDebt(Long supplierId, SupplierPayRequest request) {
         Supplier supplier = supplierRepository.findById(supplierId)
-                .orElseThrow(() -> new RuntimeException("SUPPLIER_NOT_FOUND"));
+                .orElseThrow(() -> new vn.gaspro.api.exception.AppException(vn.gaspro.api.enums.ErrorCode.SUPPLIER_NOT_EXISTED));
 
         if (request.getAmount().compareTo(supplier.getDebtBalance()) > 0) {
-            throw new RuntimeException("PAYMENT_AMOUNT_EXCEEDS_DEBT");
+            throw new vn.gaspro.api.exception.AppException(vn.gaspro.api.enums.ErrorCode.PAYMENT_AMOUNT_EXCEEDS_DEBT);
         }
 
         // Trừ công nợ

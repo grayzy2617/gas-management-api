@@ -29,7 +29,10 @@ public enum ErrorCode {
     INVALID_REQUEST_BODY(1004, "Dữ liệu Request Body không đúng định dạng JSON", HttpStatus.BAD_REQUEST),
     METHOD_NOT_ALLOWED(1005, "Phương thức HTTP không được hỗ trợ", HttpStatus.METHOD_NOT_ALLOWED),
     RESOURCE_NOT_FOUND(1006, "Không tìm thấy tài nguyên yêu cầu", HttpStatus.NOT_FOUND),
-    RATE_LIMIT_EXCEEDED(1007, "Bạn đã gửi quá nhiều yêu cầu. Vui lòng thử lại sau", HttpStatus.TOO_MANY_REQUESTS),
+    RATE_LIMIT_EXCEEDED(1007, "Bạn đã gửi quá nhiều yêu cầu. V vui lòng thử lại sau", HttpStatus.TOO_MANY_REQUESTS),
+    BRAND_MISMATCH(1008, "Hãng vỏ rỗng phải khớp với hãng bình gas đầy", HttpStatus.BAD_REQUEST),
+    INSUFFICIENT_SHELL_STOCK(1009, "Không đủ vỏ rỗng trong kho", HttpStatus.BAD_REQUEST),
+    PAYMENT_AMOUNT_EXCEEDS_DEBT(1010, "Số tiền thanh toán vượt quá dư nợ hiện tại", HttpStatus.BAD_REQUEST),
 
     // =========================================================================
     // 2. AUTH & USER ERRORS (2000 - 2999)
