@@ -41,6 +41,10 @@ public class Product {
     @Builder.Default
     Integer stockQuantity = 0;
 
+    @Column(name = "default_deposit_fee", precision = 15, scale = 2)
+    @Builder.Default
+    BigDecimal defaultDepositFee = BigDecimal.ZERO;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
     @Builder.Default

@@ -72,6 +72,8 @@ public enum ErrorCode {
     DEBT_LIMIT_EXCEEDED(5004, "Tài khoản của bạn đã vượt quá hạn mức công nợ cho phép", HttpStatus.BAD_REQUEST),
     DEBT_OVERDUE_LOCKED(5005, "Tài khoản bị khóa nợ do có khoản nợ quá hạn 30 ngày", HttpStatus.FORBIDDEN),
     CUSTOMER_SPAM_LOCKED(5006, "Khách hàng bị khóa đặt COD/Nợ do hủy đơn quá 3 lần trong 24h", HttpStatus.FORBIDDEN),
+    CART_ITEM_NOT_EXISTED(5007, "Sản phẩm không có trong giỏ hàng", HttpStatus.NOT_FOUND),
+    CART_EMPTY(5008, "Giỏ hàng đang trống", HttpStatus.BAD_REQUEST),
 
     // =========================================================================
     // 6. ORDER & DELIVERY ERRORS (6000 - 6999)

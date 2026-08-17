@@ -36,17 +36,17 @@ public class ApiResponse<T> {
                 .build();
     }
 
-//    /**
-//     * Helper tạo Response thành công có thông báo tùy chỉnh
-//     */
-//    public static <T> ApiResponse<T> success(String message, T data) {
-//        return ApiResponse.<T>builder()
-//                .code(200)
-//                .message(message)
-//                .data(data)
-//                .paging(null)
-//                .build();
-//    }
+    /**
+     * Helper tạo Response thành công có thông báo tùy chỉnh
+     */
+    public static <T> ApiResponse<T> success(T data, String message) {
+        return ApiResponse.<T>builder()
+                .code(200)
+                .message(message)
+                .data(data)
+                .paging(null)
+                .build();
+    }
 
     /**
      * Helper tạo Response thành công cho các API lấy danh sách có phân trang
